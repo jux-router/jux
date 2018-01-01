@@ -7,10 +7,7 @@ targetCompatibility = JavaVersion.VERSION_1_9
 
 dependencies {
     implementation libraries.apiguardian
-
-    implementation libraries.undertow
-    implementation libraries.guava
+    implementation project(":jux")
 
     testImplementation libraries.junit5
-    testImplementation libraries.assertj
 }

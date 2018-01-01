@@ -1,9 +1,36 @@
-subprojects {
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
+    }
+}
 
+subprojects {
     repositories {
         mavenCentral()
     }
 }
+
+ext {
+    undertowVersion = '1.4.21.Final'
+    guavaVersion = '23.6-jre'
+    apiguardianVersion = '1.0.0'
+
+    // Test library versions
+    junitVersion = '5.0.2'
+    assertjVersion = '3.8.0'
+
+    libraries = [
+            apiguardian: "org.apiguardian:apiguardian-api:$apiguardianVersion",
+            undertow   : ["io.undertow:undertow-core:$undertowVersion", "io.undertow:undertow-servlet:$undertowVersion",],
+            guava      : "com.google.guava:guava:$guavaVersion",
+            junit5     : ["org.junit.jupiter:junit-jupiter-api:$junitVersion", "org.junit.jupiter:junit-jupiter-engine:$junitVersion"],
+            assertj    : "org.assertj:assertj-core:$assertjVersion",
+    ]
+}
+
 
 
 

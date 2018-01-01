@@ -1,3 +1,0 @@
-module jax {
-    exports jux;
-}
