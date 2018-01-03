@@ -21,6 +21,7 @@ ext {
     // Test library versions
     junitVersion = '5.0.2'
     assertjVersion = '3.8.0'
+    mockitoVersion = '2.13.0'
 
     libraries = [
             apiguardian: "org.apiguardian:apiguardian-api:$apiguardianVersion",
@@ -28,6 +29,7 @@ ext {
             guava      : "com.google.guava:guava:$guavaVersion",
             junit5     : ["org.junit.jupiter:junit-jupiter-api:$junitVersion", "org.junit.jupiter:junit-jupiter-engine:$junitVersion"],
             assertj    : "org.assertj:assertj-core:$assertjVersion",
+            mockito    : ["org.mockito:mockito-core:$mockitoVersion"]
     ]
 }
 

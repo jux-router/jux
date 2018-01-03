@@ -1,41 +1,41 @@
 package jux;
 
-import com.google.common.annotations.VisibleForTesting;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class JuxRouteBuilder {
+public class Router {
 
     private LinkedList<Route> routes = new LinkedList<>();
 
-    @VisibleForTesting
     List<Route> getRoutes() {
         return routes;
     }
 
-    public JuxRouteBuilder handle(String path, Object handler) {
+    public Router handle(String path, jux.Handler handler) {
         routes.add(new Route(handler, path));
         return this;
     }
 
-    public JuxRouteBuilder methods(HttpMethod... methods) {
+    public Router methods(HttpMethod... methods) {
         this.routes.getLast().methods(methods);
         return this;
     }
 
     class Route {
-        private Object handler;
+        private jux.Handler handler;
         private String path;
         private Collection<HttpMethod> methods = new ArrayList<>();
 
-        Route(Object handler, String path) {
+        Route(jux.Handler handler, String path) {
             this.handler = handler;
             this.path = path;
         }
 
-        public Object getHandler() {
+        public jux.Handler getHandler() {
             return handler;
         }
 

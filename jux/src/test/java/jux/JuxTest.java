@@ -6,5 +6,7 @@ class JuxTest {
 
     @Test
     void aJuxTest() {
+        jux.Router router = Jux.router();
+
     }
 }
