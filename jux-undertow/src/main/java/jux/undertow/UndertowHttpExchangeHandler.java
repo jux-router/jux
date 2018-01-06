@@ -2,7 +2,10 @@ package jux.undertow;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import jux.BodyReader;
+import jux.BodyWriter;
 import jux.Handler;
+import jux.Response;
 
 class UndertowHttpExchangeHandler implements HttpHandler {
 
@@ -14,6 +17,6 @@ class UndertowHttpExchangeHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        handler.handle(null, new UndertowRequest(exchange));
+        Response r = handler.handle(null, new UndertowRequest(exchange));
     }
 }
