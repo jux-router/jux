@@ -13,6 +13,6 @@ class UndertowHttpExchangeHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-
+        handler.handle(null, new UndertowRequest(exchange));
     }
 }

@@ -6,8 +6,12 @@ sourceCompatibility = JavaVersion.VERSION_1_9
 targetCompatibility = JavaVersion.VERSION_1_9
 
 dependencies {
+    api project(':jux')
+
     implementation libraries.apiguardian
-    implementation project(":jux")
+    implementation libraries.jackson
 
     testImplementation libraries.junit5
+    testImplementation libraries.assertj
+    testImplementation libraries.mockito
 }

@@ -17,6 +17,7 @@ ext {
     undertowVersion = '1.4.21.Final'
     guavaVersion = '23.6-jre'
     apiguardianVersion = '1.0.0'
+    jacksonVersion = '2.9.3'
 
     // Test library versions
     junitVersion = '5.0.2'
@@ -27,6 +28,7 @@ ext {
             apiguardian: "org.apiguardian:apiguardian-api:$apiguardianVersion",
             undertow   : ["io.undertow:undertow-core:$undertowVersion", "io.undertow:undertow-servlet:$undertowVersion",],
             guava      : "com.google.guava:guava:$guavaVersion",
+            jackson    : ["com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"],
             junit5     : ["org.junit.jupiter:junit-jupiter-api:$junitVersion", "org.junit.jupiter:junit-jupiter-engine:$junitVersion"],
             assertj    : "org.assertj:assertj-core:$assertjVersion",
             mockito    : ["org.mockito:mockito-core:$mockitoVersion"]

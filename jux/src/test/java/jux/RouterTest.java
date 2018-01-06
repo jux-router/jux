@@ -11,8 +11,8 @@ class RouterTest {
 
     @Test
     void buildsBasicRoutes() {
-        jux.Handler h1 = (ctx, req, resp) -> {};
-        jux.Handler h2 = (ctx, req, resp) -> {};
+        jux.Handler h1 = (ctx, req) -> null;
+        jux.Handler h2 = (ctx, req) -> null;
         Router routeBuilder = new Router()
                 .handle("/head/get", h1).methods(HEAD, GET)
                 .handle("/2ndhandler", h2).methods(POST);

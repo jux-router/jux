@@ -1,4 +1,4 @@
 package jux;
 
-public interface Request {
+public interface Request<T> {
 }

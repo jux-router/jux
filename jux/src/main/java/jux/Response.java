@@ -1,4 +1,7 @@
 package jux;
 
-public interface Response {
+public class Response<T> {
+
+    Response() {}
+
 }
