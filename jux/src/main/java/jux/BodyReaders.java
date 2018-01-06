@@ -1,8 +1,11 @@
 package jux;
 
-import java.util.HashMap;
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Utility class for finding {@link BodyReader body readers}.
@@ -13,13 +16,12 @@ public class BodyReaders {
 
     static {
         // this is thread-safe, because we'll only read
-        readers = new HashMap<>();
         ServiceLoader<BodyReader> loader = ServiceLoader.load(BodyReader.class);
-        for (BodyReader reader : loader) {
-            reader.supportedMediaTypes().forEach(mediaType -> {
-                readers.put(mediaType, reader);
-            });
-        }
+        readers = loader.stream()
+                .map(ServiceLoader.Provider::get)
+                .flatMap(r -> r.supportedMediaTypes().stream()
+                        .map(m -> new AbstractMap.SimpleEntry<>(m, r)))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static BodyReader forMediaType(String mediaType) {

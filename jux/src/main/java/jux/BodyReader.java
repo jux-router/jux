@@ -1,6 +1,7 @@
 package jux;
 
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * The {@code BodyReader} reads the body of an input into a specified class.
@@ -12,7 +13,7 @@ public interface BodyReader {
      *
      * @return true if it is supported
      */
-    Iterable<String> supportedMediaTypes();
+    Collection<String> supportedMediaTypes();
 
     /**
      * Read the input.
