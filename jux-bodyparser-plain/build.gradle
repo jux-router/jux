@@ -5,3 +5,25 @@ apply plugin: 'org.kordamp.jdeps'
 
 sourceCompatibility = JavaVersion.VERSION_1_9
 targetCompatibility = JavaVersion.VERSION_1_9
+
+ext.moduleName = 'jux.bodyparser.plain'
+
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
+
+dependencies {
+    implementation project(':jux')
+    implementation libraries.guava
+
+    testImplementation libraries.junit5
+    testImplementation libraries.assertj
+    testImplementation libraries.mockito
+    testImplementation libraries.log4j_impl
+}
