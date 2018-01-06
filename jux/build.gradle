@@ -21,7 +21,6 @@ compileJava {
 dependencies {
     implementation libraries.apiguardian
     implementation libraries.log4j_api
-    implementation libraries.guava
 
     testImplementation libraries.junit5
     testImplementation libraries.assertj
