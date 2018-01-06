@@ -2,4 +2,3 @@ rootProject.name = 'jux'
 
 include 'jux'
 include 'jux-undertow'
-include 'jux-serializer-jackson'

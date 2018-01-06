@@ -8,8 +8,6 @@ class UndertowHttpExchangeHandlerTest {
 
     @Test
     void simplestRequestIsReturningCorrectly() {
-        HttpServerExchange exchange = new HttpServerExchange(null, 0);
-        HttpServerExchange spy = Mockito.spy(exchange);
 
     }
 }

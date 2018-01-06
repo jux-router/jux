@@ -6,10 +6,24 @@ apply plugin: 'org.kordamp.jdeps'
 sourceCompatibility = JavaVersion.VERSION_1_9
 targetCompatibility = JavaVersion.VERSION_1_9
 
+ext.moduleName = 'jux'
+
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
+
 dependencies {
     implementation libraries.apiguardian
+    implementation libraries.log4j_api
 
     testImplementation libraries.junit5
     testImplementation libraries.assertj
     testImplementation libraries.mockito
+    testImplementation libraries.log4j_impl
 }

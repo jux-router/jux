@@ -8,6 +8,13 @@ import java.io.InputStream;
 public interface BodyReader {
 
     /**
+     * Returns all supported media types.
+     *
+     * @return true if it is supported
+     */
+    Iterable<String> supportedMediaTypes();
+
+    /**
      * Read the input.
      *
      * @param is          the input
