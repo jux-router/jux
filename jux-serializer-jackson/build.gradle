@@ -10,8 +10,10 @@ dependencies {
 
     implementation libraries.apiguardian
     implementation libraries.jackson
+    implementation libraries.slf4j
 
     testImplementation libraries.junit5
     testImplementation libraries.assertj
     testImplementation libraries.mockito
+    testImplementation libraries.log4j
 }

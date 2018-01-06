@@ -1,7 +1,8 @@
-package jux;
+package jux.undertow;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import jux.Handler;
 
 class UndertowHttpExchangeHandler implements HttpHandler {
 

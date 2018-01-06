@@ -1,13 +1,10 @@
 package jux;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
-public class Router {
+public class Router implements Iterable<Router.Route> {
 
     private LinkedList<Route> routes = new LinkedList<>();
 
@@ -25,7 +22,12 @@ public class Router {
         return this;
     }
 
-    class Route {
+    @Override
+    public Iterator<Route> iterator() {
+        return routes.iterator();
+    }
+
+    public class Route {
         private jux.Handler handler;
         private String path;
         private Collection<HttpMethod> methods = new ArrayList<>();

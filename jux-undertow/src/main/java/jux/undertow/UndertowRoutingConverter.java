@@ -1,10 +1,13 @@
-package jux;
+package jux.undertow;
 
 import io.undertow.Handlers;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.RoutingHandler;
+import jux.Router;
+import jux.RouterConverter;
 
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Converts the routes registered in {@link jux.Router} into a
@@ -16,7 +19,7 @@ class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
     public RoutingHandler convert(Router router) {
         RoutingHandler handler = Handlers.routing();
 
-        router.getRoutes().stream()
+        StreamSupport.stream(router.spliterator(), false)
                 .flatMap(this::routes)
                 .forEach(r -> handler.add(r.method, r.path, r.handler));
 

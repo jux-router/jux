@@ -1,6 +1,9 @@
-package jux;
+package jux.undertow;
 
 import io.undertow.Undertow;
+import jux.PortProvider;
+import jux.Router;
+import jux.Server;
 
 class UndertowServer implements Server {
 

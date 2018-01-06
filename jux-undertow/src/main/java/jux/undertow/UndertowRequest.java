@@ -1,6 +1,7 @@
-package jux;
+package jux.undertow;
 
 import io.undertow.server.HttpServerExchange;
+import jux.Request;
 
 class UndertowRequest<T> implements Request<T> {
 
