@@ -18,4 +18,9 @@ public class MockServer implements Server {
     public void start() {
 
     }
+
+    @Override
+    public void stop() {
+
+    }
 }

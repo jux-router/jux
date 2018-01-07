@@ -8,16 +8,6 @@ targetCompatibility = JavaVersion.VERSION_1_9
 
 ext.moduleName = 'jux.bodyparser.plain'
 
-compileJava {
-    inputs.property("moduleName", moduleName)
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-        ]
-        classpath = files()
-    }
-}
-
 dependencies {
     implementation project(':jux')
     implementation libraries.guava

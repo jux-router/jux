@@ -7,4 +7,6 @@ public interface Server {
     Server use(jux.Router router);
 
     void start();
+
+    void stop();
 }

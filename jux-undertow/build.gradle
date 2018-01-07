@@ -7,23 +7,6 @@ targetCompatibility = JavaVersion.VERSION_1_9
 
 ext.moduleName = 'jux.undertow'
 
-compileJava {
-    inputs.property("moduleName", moduleName)
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-        ]
-        classpath = files()
-    }
-}
-
-jar {
-    inputs.property("moduleName", moduleName)
-    manifest {
-        attributes('Automatic-Module-Name': moduleName)
-    }
-}
-
 dependencies {
     api project(':jux')
 
@@ -36,5 +19,6 @@ dependencies {
     testImplementation libraries.mockito
 
     testImplementation libraries.log4j_impl
+    testImplementation libraries.httpclient
     testImplementation project(':jux-bodyparser-plain')
 }

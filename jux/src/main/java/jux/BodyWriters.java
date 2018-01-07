@@ -1,5 +1,8 @@
 package jux;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -8,6 +11,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class BodyWriters {
 
+    private static final Logger LOG = LogManager.getLogger(BodyWriters.class);
     private static final Map<String, BodyWriter> writers;
 
     static {
@@ -16,6 +20,7 @@ public class BodyWriters {
                 .map(ServiceLoader.Provider::get)
                 .flatMap(r -> r.supportedMediaTypes().stream()
                         .map(m -> new AbstractMap.SimpleEntry<>(m, r)))
+                .peek(e -> LOG.debug("Register {} to handle {}", e.getValue().getClass(), e.getKey()))
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 

@@ -4,5 +4,5 @@ module jux.undertow {
     requires jux;
     requires undertow.core;
 
-    uses jux.BodyWriter;
+    provides jux.Server with jux.undertow.UndertowServer;
 }

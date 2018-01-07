@@ -10,8 +10,53 @@ buildscript {
 }
 
 subprojects {
-    repositories {
-        mavenCentral()
+    afterEvaluate {
+        repositories {
+            mavenCentral()
+        }
+
+        jar {
+            inputs.property("moduleName", moduleName)
+            manifest {
+                attributes('Automatic-Module-Name': moduleName)
+            }
+        }
+
+        compileJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                        '--module-path', classpath.asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        compileTestJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                        '--module-path', classpath.asPath,
+                        '--add-modules', 'org.junit.jupiter.api',
+                        '--add-reads', "$moduleName=org.junit.jupiter.api",
+                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        test {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                jvmArgs = [
+                        '--module-path', classpath.asPath,
+                        '--add-modules', 'ALL-MODULE-PATH',
+                        '--add-reads', "$moduleName=junit",
+                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
+                ]
+                classpath = files()
+            }
+        }
     }
 }
 
@@ -20,7 +65,9 @@ ext {
     guavaVersion = '23.6-jre'
     apiguardianVersion = '1.0.0'
     jacksonVersion = '2.9.3'
+    slf4jVersion = '1.7.25'
     log4j2Version = '2.10.0'
+    hcVersion = '4.5.4'
     // Test library versions
     junitVersion = '5.0.2'
     assertjVersion = '3.8.0'
@@ -28,9 +75,10 @@ ext {
 
     libraries = [
             apiguardian: "org.apiguardian:apiguardian-api:$apiguardianVersion",
-            undertow   : ["io.undertow:undertow-core:$undertowVersion", "io.undertow:undertow-servlet:$undertowVersion",],
+            undertow   : ["io.undertow:undertow-core:$undertowVersion"],
             guava      : "com.google.guava:guava:$guavaVersion",
             jackson    : ["com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"],
+            httpclient : "org.apache.httpcomponents:httpclient:$hcVersion",
             log4j_api  : "org.apache.logging.log4j:log4j-api:$log4j2Version",
             log4j_impl : "org.apache.logging.log4j:log4j-core:$log4j2Version",
 

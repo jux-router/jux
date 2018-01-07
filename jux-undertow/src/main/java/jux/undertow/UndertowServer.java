@@ -5,13 +5,14 @@ import jux.PortProvider;
 import jux.Router;
 import jux.Server;
 
-class UndertowServer implements Server {
+public class UndertowServer implements Server {
 
     private UndertowRoutingConverter routingConverter;
 
     private Undertow.Builder undertow;
+    private Undertow server;
 
-    UndertowServer() {
+    public UndertowServer() {
         undertow = Undertow.builder();
         routingConverter = new UndertowRoutingConverter();
     }
@@ -32,6 +33,12 @@ class UndertowServer implements Server {
 
     @Override
     public void start() {
-        undertow.build().start();
+        server = undertow.build();
+        server.start();
+    }
+
+    @Override
+    public void stop() {
+        server.stop();
     }
 }
