@@ -1,9 +1,6 @@
 package jux.undertow;
 
-import jux.HttpMethod;
-import jux.Jux;
-import jux.Response;
-import jux.Router;
+import jux.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -13,16 +10,18 @@ import org.junit.jupiter.api.Test;
  */
 class UndertowServerTest {
 
+    private Server server;
+
     @AfterEach
     void stopJux() {
-        Jux.stop();
+        server.stop();
     }
 
-    @Test @Disabled
+    @Test
     void test() {
         Router router = Jux.router();
         router.handle("/foo", (ctx, req) -> Response.ok("hello").as("text/plain")).methods(HttpMethod.GET);
-        Jux.start(0, router);
+        server = Jux.start(0, router);
     }
 
 }
