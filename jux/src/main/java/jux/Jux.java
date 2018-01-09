@@ -27,6 +27,7 @@ public class Jux {
         server.use(router)
                 .listenOn(port)
                 .start();
+        LOG.info("Listening on {}", port);
         return server;
     }
 

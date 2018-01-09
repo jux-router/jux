@@ -17,7 +17,7 @@ dependencies {
     testImplementation libraries.junit5
     testImplementation libraries.assertj
     testImplementation libraries.mockito
-
+    testImplementation libraries.guava
     testImplementation libraries.log4j_impl
     testImplementation libraries.httpclient
     testImplementation project(':jux-bodyparser-plain')
