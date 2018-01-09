@@ -21,4 +21,5 @@ dependencies {
     testImplementation libraries.log4j_impl
     testImplementation libraries.httpclient
     testImplementation project(':jux-bodyparser-plain')
+    testImplementation project(':jux-test')
 }

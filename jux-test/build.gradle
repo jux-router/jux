@@ -1,0 +1,13 @@
+apply plugin: 'java-library'
+apply plugin: 'idea'
+
+sourceCompatibility = JavaVersion.VERSION_1_9
+targetCompatibility = JavaVersion.VERSION_1_9
+
+ext.moduleName = 'jux.test'
+
+dependencies {
+    implementation project(':jux')
+    implementation libraries.junit5
+    implementation libraries.log4j_api
+}

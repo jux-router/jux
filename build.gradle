@@ -82,7 +82,9 @@ ext {
             log4j_api  : "org.apache.logging.log4j:log4j-api:$log4j2Version",
             log4j_impl : "org.apache.logging.log4j:log4j-core:$log4j2Version",
 
-            junit5     : ["org.junit.jupiter:junit-jupiter-api:$junitVersion", "org.junit.jupiter:junit-jupiter-engine:$junitVersion"],
+            junit5     : ["org.junit.jupiter:junit-jupiter-api:$junitVersion",
+                          "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
+                          "org.junit.jupiter:junit-jupiter-params:$junitVersion"],
             assertj    : "org.assertj:assertj-core:$assertjVersion",
             mockito    : ["org.mockito:mockito-core:$mockitoVersion"]
     ]
