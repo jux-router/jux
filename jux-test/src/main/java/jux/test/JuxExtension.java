@@ -33,10 +33,8 @@ public class JuxExtension
                 () -> new IllegalStateException("No test instance!"));
         Method[] methods = context.getTestClass().get().getDeclaredMethods();
         for (Method method : methods) {
-            LOG.debug("Checking {}", method.getName());
             if (method.getAnnotation(RouteProvider.class) != null &&
                     method.trySetAccessible()) {
-                LOG.debug("Invoking router setup");
                 method.invoke(instance, router);
             }
         }

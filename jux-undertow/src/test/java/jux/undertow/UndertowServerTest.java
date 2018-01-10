@@ -34,6 +34,7 @@ class UndertowServerTest {
     @Test
     void test(@TestServerPort Integer port) throws Exception {
         HttpGet get = new HttpGet("http://localhost:" + port.intValue() + "/foo");
+
         CloseableHttpResponse response = client.execute(get);
 
         assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
