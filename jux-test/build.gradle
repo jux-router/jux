@@ -10,4 +10,13 @@ dependencies {
     implementation libraries.guava
     implementation libraries.httpclient
     implementation libraries.log4j_api
+    testImplementation libraries.log4j_impl
+}
+
+junitPlatform {
+    filters {
+        tags {
+            exclude 'JuxTest'
+        }
+    }
 }

@@ -21,6 +21,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -33,6 +35,7 @@ import static jux.HttpMethod.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(JuxExtension.class)
+@Tags({@Tag("JuxTest")})
 class BasicHandlerTest {
 
     private HttpClient client = HttpClientBuilder.create().build();
