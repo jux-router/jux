@@ -27,6 +27,22 @@
     </parent>
     <artifactId>jux-undertow</artifactId>
     <name>jux-undertow</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <dependenciesToScan>jux:jux-test</dependenciesToScan>
+                    <properties>
+                        <includeTags>JuxTest</includeTags>
+                    </properties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
