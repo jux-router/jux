@@ -150,6 +150,11 @@
                 <artifactId>jux-undertow</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>jux</groupId>
+                <artifactId>jux-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.google.guava</groupId>

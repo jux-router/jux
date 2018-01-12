@@ -69,6 +69,11 @@
         </dependency>
         <dependency>
             <groupId>jux</groupId>
+            <artifactId>jux-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jux</groupId>
             <artifactId>jux-bodyparser-plain</artifactId>
             <version>${project.version}</version>
         </dependency>
