@@ -120,6 +120,9 @@
                         <exclude>**/README</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
+                        <exclude>**/mvnw</exclude>
+                        <exclude>**/mvnw.cmd</exclude>
+                        <exclude>**/.mvn/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
