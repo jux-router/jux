@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sandor-nemeth/jux.svg?branch=master)](https://travis-ci.org/sandor-nemeth/jux)
+
 # jux
 > A minimalist Java web framework.
 
