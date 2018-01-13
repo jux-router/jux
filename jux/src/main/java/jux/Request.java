@@ -15,6 +15,9 @@
  */
 package jux;
 
+import java.util.Optional;
+
 public interface Request {
 
+    Optional<String> getParam(String param);
 }

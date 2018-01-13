@@ -18,6 +18,9 @@ package jux.undertow;
 import io.undertow.server.HttpServerExchange;
 import jux.Request;
 
+import java.util.Deque;
+import java.util.Optional;
+
 class UndertowRequest implements Request {
 
     private HttpServerExchange exchange;
@@ -26,4 +29,10 @@ class UndertowRequest implements Request {
         this.exchange = exchange;
     }
 
+    @Override
+    public Optional<String> getParam(String param) {
+        return Optional
+                .ofNullable(exchange.getQueryParameters().get(param))
+                .map(Deque::getFirst);
+    }
 }
