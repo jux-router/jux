@@ -66,7 +66,8 @@ public class JuxExtension
         TestServerPort injectionPoint = p.getAnnotation(TestServerPort.class);
 
         return null != injectionPoint &&
-                Integer.class.isAssignableFrom(p.getType());
+                (Integer.class.isAssignableFrom(p.getType())
+                || int.class.isAssignableFrom(p.getType()));
     }
 
     @Override
