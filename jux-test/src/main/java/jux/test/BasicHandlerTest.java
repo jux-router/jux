@@ -28,7 +28,7 @@ import static jux.HttpMethod.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JuxTest
-class BasicHandlerTest extends JuxTestBase {
+class BasicHandlerTest extends ResponseExpectingTestBase {
 
     @Override
     void validateResponse(HttpResponse response) throws Exception {
