@@ -16,9 +16,7 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>jux</groupId>
@@ -81,6 +79,7 @@
         <junit.platform.version>1.0.2</junit.platform.version>
         <assertj.version>3.8.0</assertj.version>
         <httpclient.version>4.5.4</httpclient.version>
+        <mockito.version>2.13.0</mockito.version>
 
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
@@ -92,7 +91,8 @@
         <module>jux-bodyparser-plain</module>
         <module>jux-test</module>
         <module>jux-undertow</module>
-    </modules>
+    <module>jux-bodyparser-jackson</module>
+  </modules>
 
     <build>
         <pluginManagement>
@@ -244,6 +244,11 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -13,20 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jux;
+package jux.bodyparser.jackson;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jux.BodyReader;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
-public class MockBodyWriter implements BodyWriter {
-    @Override
-    public Collection<String> supportedMediaTypes() {
-        return List.of("text/plain");
+/**
+ * {@link BodyReader} implementation using Jackson as the JSON processing library.
+ *
+ * @author Sandor Nemeth
+ */
+public class JacksonBodyReader implements BodyReader {
+
+    private ObjectMapper objectMapper;
+
+    public JacksonBodyReader() {
+        objectMapper = new ObjectMapperSupplier().get();
     }
 
     @Override
-    public String write(Object o) throws IOException {
-        return null;
+    public Collection<String> supportedMediaTypes() {
+        return Collections.singletonList("application/json");
+    }
+
+    @Override
+    public <T> T read(InputStream is, Class<T> returnClass) throws IOException {
+        return objectMapper.readValue(is, returnClass);
     }
 }

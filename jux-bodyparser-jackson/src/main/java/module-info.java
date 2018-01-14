@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jux;
+import jux.bodyparser.jackson.JacksonBodyReader;
+import jux.bodyparser.jackson.JacksonBodyWriter;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+module jux.bodyparser.jackson {
+    requires jux;
+    requires org.apache.logging.log4j;
+    requires com.fasterxml.jackson.databind;
 
-public class MockBodyWriter implements BodyWriter {
-    @Override
-    public Collection<String> supportedMediaTypes() {
-        return List.of("text/plain");
-    }
+    uses jux.bodyparser.jackson.ObjectMapperProvider;
 
-    @Override
-    public String write(Object o) throws IOException {
-        return null;
-    }
+    provides jux.BodyReader with JacksonBodyReader;
+    provides jux.BodyWriter with JacksonBodyWriter;
 }
