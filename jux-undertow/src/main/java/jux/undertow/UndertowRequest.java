@@ -16,8 +16,10 @@
 package jux.undertow;
 
 import io.undertow.server.HttpServerExchange;
+import jux.BodyReaders;
 import jux.Request;
 
+import java.io.IOException;
 import java.util.Deque;
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ class UndertowRequest implements Request {
 
     private HttpServerExchange exchange;
 
-    public UndertowRequest(HttpServerExchange exchange) {
+    UndertowRequest(HttpServerExchange exchange) {
         this.exchange = exchange;
     }
 
@@ -34,5 +36,20 @@ class UndertowRequest implements Request {
         return Optional
                 .ofNullable(exchange.getQueryParameters().get(param))
                 .map(Deque::getFirst);
+    }
+
+    @Override
+    public <T> T getBody(Class<T> returnClass) {
+        try {
+            exchange.startBlocking();
+            return BodyReaders.forMediaType(getMediaType()).read(exchange.getInputStream(), returnClass);
+        } catch (IOException e) {
+            // TODO handle this exception properly! This should probably be a 4xx
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getMediaType() {
+        return exchange.getRequestHeaders().getFirst("Content-Type");
     }
 }
