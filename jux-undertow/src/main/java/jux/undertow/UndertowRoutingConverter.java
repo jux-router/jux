@@ -18,6 +18,7 @@ package jux.undertow;
 import io.undertow.Handlers;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.RoutingHandler;
+import io.undertow.server.handlers.BlockingHandler;
 import jux.Router;
 import jux.RouterConverter;
 
@@ -36,7 +37,7 @@ class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
 
         StreamSupport.stream(router.spliterator(), false)
                 .flatMap(this::routes)
-                .forEach(r -> handler.add(r.method, r.path, r.handler));
+                .forEach(r -> handler.add(r.method, r.path, new BlockingHandler(r.handler)));
 
         return handler;
     }

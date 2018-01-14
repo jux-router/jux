@@ -15,29 +15,37 @@
  */
 package jux.test;
 
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-/**
- * {@link ArgumentsProvider} to provide new {@link HttpUriRequest} instances
- * for GET, POST, PUT, PATCH and DELETE requests, which can be populated later
- * with correct URL and request informations.
- */
-public class RequestProvider implements ArgumentsProvider {
+abstract class RequestEnclosingTestBase extends JuxTestBase {
 
-    @Override
-    public Stream<? extends Arguments> provideArguments(
-            ExtensionContext extensionContext) throws Exception {
+    private static Stream<Arguments> arguments() {
         return Stream.of(
-                Arguments.of(new HttpGet()),
                 Arguments.of(new HttpPost()),
                 Arguments.of(new HttpPut()),
-                Arguments.of(new HttpPatch()),
-                Arguments.of(new HttpDelete())
+                Arguments.of(new HttpPatch())
         );
     }
+
+    @ParameterizedTest
+    @MethodSource("arguments")
+    void executeTest(HttpEntityEnclosingRequestBase request,
+                            @TestServerPort int port,
+                            HttpClient client) throws Exception {
+        execute(request, port, client);
+    }
+
+    @Override
+    void configureRequest(HttpRequestBase request, int port) throws Exception {
+        configureRequest((HttpEntityEnclosingRequestBase) request, port);
+    }
+
+    abstract void configureRequest(HttpEntityEnclosingRequestBase req,
+                                   int port) throws Exception;
 }

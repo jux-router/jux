@@ -32,4 +32,12 @@ class BodyReadersTest {
         Assertions.assertThatThrownBy(() -> BodyReaders.forMediaType("a/b"))
                 .isInstanceOf(IllegalStateException.class);
     }
+
+    @Test
+    void testHandleCharsetAdditionToMediaType() {
+        BodyReader reader = BodyReaders.forMediaType("text/plain; charset=ISO-8859-1");
+        Assertions.assertThat(reader)
+                .isNotNull()
+                .isInstanceOf(MockBodyReader.class);
+    }
 }

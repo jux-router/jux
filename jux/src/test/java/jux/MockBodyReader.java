@@ -15,6 +15,7 @@
  */
 package jux;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
@@ -28,8 +29,9 @@ public class MockBodyReader implements BodyReader {
         return List.of("text/plain");
     }
 
+    @SuppressWarnings("RedundantThrows")
     @Override
-    public <T> T read(InputStream is, Class<T> returnClass) {
+    public <T> T read(InputStream is, Class<T> returnClass) throws IOException {
         return null;
     }
 }

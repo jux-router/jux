@@ -15,6 +15,7 @@
  */
 package jux;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -33,11 +34,12 @@ public interface BodyReader {
     /**
      * Read the input.
      *
+     * @param <T>         the return value
      * @param is          the input
      * @param returnClass the type of the return value
-     * @param <T>         the return value
      * @return the populated request object
+     * @throws IOException when the input cannot be read
      */
-    <T> T read(InputStream is, Class<T> returnClass);
+    <T> T read(InputStream is, Class<T> returnClass) throws IOException;
 
 }

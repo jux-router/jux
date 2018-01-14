@@ -15,27 +15,23 @@
  */
 package jux.test;
 
-import com.google.common.io.CharStreams;
-import jux.*;
+import jux.Context;
+import jux.Request;
+import jux.Response;
+import jux.Router;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.entity.StringEntity;
 
-import java.io.InputStreamReader;
 import java.net.URI;
 
 import static jux.HttpMethod.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Test plain text body reading.
+ */
 @JuxTest
-class PathVariableHandlerTest extends ResponseExpectingTestBase {
-
-    @Override
-    void configureRequest(HttpRequestBase request, int port) {
-        request.setURI(URI.create("http://localhost:" + port + "/foo/hello/1"));
-    }
-
+public class PlainTextBodyReadingTest extends RequestEnclosingTestBase {
     @SuppressWarnings("RedundantThrows")
     @Override
     void validateResponse(HttpResponse response) throws Exception {
@@ -46,22 +42,21 @@ class PathVariableHandlerTest extends ResponseExpectingTestBase {
     }
 
     @Override
+    void configureRequest(HttpEntityEnclosingRequestBase req, int port)
+            throws Exception {
+        req.setURI(URI.create("http://localhost:" + port + "/foo"));
+        req.setEntity(new StringEntity("hello"));
+    }
+
+    @Override
     @RouteProvider
     protected void configureRoutes(Router router) {
-        router.handle("/foo/{param}/1", new ParamHandler())
+        router.handle("/foo", PlainTextBodyReadingTest::handlePlainBody)
                 .methods(GET, POST, PUT, DELETE, PATCH);
     }
 
-    static class ParamHandler implements Handler {
-
-        private static final Logger LOG =
-                LogManager.getLogger(ParamHandler.class);
-
-        @Override
-        public Response handle(Context ctx, Request req) {
-            String param = req.getParam("param").orElse("");
-            LOG.info("Param is: {}", param);
-            return Response.ok(param).as("text/plain");
-        }
+    private static Response<String> handlePlainBody(@SuppressWarnings("unused") Context ctx, Request req) {
+        String body = req.getBody(String.class);
+        return Response.ok(body).as("text/plain");
     }
 }

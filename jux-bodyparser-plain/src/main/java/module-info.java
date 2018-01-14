@@ -17,6 +17,7 @@ import jux.bodyparser.plain.PlainTextBodyWriter;
 
 module jux.bodyparser.plain {
     requires jux;
+    requires com.google.common;
 
     provides jux.BodyWriter with PlainTextBodyWriter;
 }
