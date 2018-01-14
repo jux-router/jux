@@ -13,20 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jux;
+package jux.bodyparser.jackson;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jux.BodyWriter;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
-public class MockBodyWriter implements BodyWriter {
+/**
+ * {@link BodyWriter} implementation using Jackson as a JSON renderer.
+ *
+ * Supports {@code application/json} media type.
+ *
+ * @author Sandor Nemeth
+ */
+public class JacksonBodyWriter implements BodyWriter {
+
+    private ObjectMapper objectMapper;
+
+    public JacksonBodyWriter() {
+        objectMapper = new ObjectMapperSupplier().get();
+    }
+
     @Override
     public Collection<String> supportedMediaTypes() {
-        return List.of("text/plain");
+        return Collections.singletonList("application/json");
     }
 
     @Override
     public String write(Object o) throws IOException {
-        return null;
+        return objectMapper.writeValueAsString(o);
     }
 }

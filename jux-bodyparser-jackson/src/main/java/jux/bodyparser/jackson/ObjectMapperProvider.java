@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jux;
+package jux.bodyparser.jackson;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MockBodyWriter implements BodyWriter {
-    @Override
-    public Collection<String> supportedMediaTypes() {
-        return List.of("text/plain");
-    }
+import java.util.function.Supplier;
 
-    @Override
-    public String write(Object o) throws IOException {
-        return null;
-    }
+/**
+ * Interface for the {@link java.util.ServiceLoader} to find a suitable Jackson provider.
+ *
+ * @author Sandor Nemeth
+ */
+public interface ObjectMapperProvider extends Supplier<ObjectMapper> {
 }

@@ -15,12 +15,13 @@
  */
 package jux;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public interface BodyWriter {
 
     Collection<String> supportedMediaTypes();
 
-    String write(Object o);
+    String write(Object o) throws IOException;
 
 }

@@ -13,22 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jux.bodyparser.plain;
+package jux.bodyparser.jackson;
 
-import jux.BodyWriter;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+class JacksonBodyWriterTest {
 
-public class PlainTextBodyWriter implements BodyWriter {
-    @Override
-    public Collection<String> supportedMediaTypes() {
-        return List.of("text/plain");
+    private JacksonBodyWriter writer = new JacksonBodyWriter();
+
+    @Test
+    void testSupportsJson() {
+        Assertions.assertThat(writer.supportedMediaTypes())
+                .hasSize(1)
+                .containsExactlyInAnyOrder("application/json");
     }
 
-    @Override
-    public String write(Object o) throws IOException {
-        return null != o ? o.toString() : "";
+    @Test
+    void testWritesJsonBody() throws Exception {
+        TestPojo pojo = new TestPojo("str", 1);
+        String body = writer.write(pojo);
+        Assertions.assertThat(body)
+                .isEqualTo("{\"stringValue\":\"str\",\"intValue\":1}");
     }
 }
