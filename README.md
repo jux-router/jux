@@ -1,28 +1,42 @@
-[![Build Status](https://travis-ci.org/sandor-nemeth/jux.svg?branch=master)](https://travis-ci.org/sandor-nemeth/jux)
-
 # jux
-> A minimalist Java web framework.
+> A minimalist and opinionated Java web framework.
 
-A brief description of your project, what it is used for and how does life get
-awesome when someone starts to use it.
+[![Build Status](https://travis-ci.org/jux-router/jux.svg?branch=master)](https://travis-ci.org/jux-router/jux)
 
-## Installing / Getting started
+The `jux` project is born out of the idea that the Java community should also
+have a simple library which provides a high-performance web framework, while
+being extendable and very simple in the same moment. 
+
+This project builds on several principles:
+
+- _Use only what's needed_: the features one needs have to be explicitly
+  included
+- _What's there should be present_: the included features should be - as much as
+  it is possible - automatically registered and configured, no extra things
+  necessary
+- _Be cloud native_: the application should be containerizable utilizing the
+  full extent of the features supported there: e.g. it should react correctly to
+  the `SIGTERM` and `SIGKILL` signals a container might receive
+ 
+## Getting started
 
 Get Jux via either Maven or Gradle:
 
 **Maven**
 
 ```xml
-<dependency>
-    <groupId>jux</groupId>
-    <artifactId>jux-undertow</artifactId>
-    <version>${jux.version}</version>
-</dependency>
-<dependency>
-    <groupId>jux</groupId>
-    <artifactId>jux-bodyparser-plain</artifactId>
-    <version>${jux.version}</version>
-</dependency>
+<dependencies>
+    <dependency>
+        <groupId>jux</groupId>
+        <artifactId>jux-undertow</artifactId>
+        <version>${jux.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>jux</groupId>
+        <artifactId>jux-bodyparser-plain</artifactId>
+        <version>${jux.version}</version>
+    </dependency>
+</dependencies>
 ```
 
 **Gradle**
@@ -34,36 +48,37 @@ dependencies {
 }
 ```
 
-And afterwards to get started in your application:
+And afterwards the simplest way to get a simple app up and running:
 
 ```java
 class App {
     
     public static void main(String... args) {
         Router router = Jux.router()
-            .handle("/foo", (ctx, req) -> Response.ok("hello").as("text/plain"))
-                .methods(HttpMethod.GET);
+            .handle("/foo", App::sayHello).methods(HttpMethod.GET);
         Jux.start(8080, router);
     }
+    
+    public static Response sayHello(Context ctx, Request req) {
+        return Response.ok("hello").as("text/plain");
+    } 
     
 }
 ```
 
+Then just go to [http://localhost:8080/hello] and see the result.
+
 ## Developing
 
-If you want to build the project:
+**Java 9** is a prerequisite for this project to be built, so make sure that it
+is configured. Afterwards just check out the repository, and build the project
+via `mvnw`. 
 
 ```shell
-git clone https://github.com/sandor-nemeth/jux.git
+git clone https://github.com/jux-router/jux.git
 cd jux/
-./gradlew wrapper build
+./mvnw clean install
 ```
-
-### Deploying / Publishing
-
-## Features
-
-## Configuration
 
 ## Contributing
 
