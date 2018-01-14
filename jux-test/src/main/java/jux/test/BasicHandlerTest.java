@@ -30,16 +30,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JuxTest
 class BasicHandlerTest extends ResponseExpectingTestBase {
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     void validateResponse(HttpResponse response) throws Exception {
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
-        String result = CharStreams.toString(
-                new InputStreamReader(response.getEntity().getContent()));
-        assertThat(result).isEqualTo("hello");
-        assertThat(response.getFirstHeader("Content-Type").getValue())
-                .isEqualTo("text/plain");
+        JuxAssertions.assertThat(response)
+                .isOk()
+                .hasContentType("text/plain")
+                .hasStringContent("hello");
     }
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     void configureRequest(HttpRequestBase request, int port) throws Exception {
         request.setURI(URI.create("http://localhost:" + port + "/foo"));

@@ -16,17 +16,14 @@
 package jux.test;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-public abstract class RequestEnclosingTestBase extends JuxTestBase {
+abstract class RequestEnclosingTestBase extends JuxTestBase {
 
     private static Stream<Arguments> arguments() {
         return Stream.of(
@@ -38,11 +35,17 @@ public abstract class RequestEnclosingTestBase extends JuxTestBase {
 
     @ParameterizedTest
     @MethodSource("arguments")
-    public void executeTest(HttpEntityEnclosingRequestBase request,
+    void executeTest(HttpEntityEnclosingRequestBase request,
                             @TestServerPort int port,
                             HttpClient client) throws Exception {
         execute(request, port, client);
     }
 
+    @Override
+    void configureRequest(HttpRequestBase request, int port) throws Exception {
+        configureRequest((HttpEntityEnclosingRequestBase) request, port);
+    }
 
+    abstract void configureRequest(HttpEntityEnclosingRequestBase req,
+                                   int port) throws Exception;
 }
