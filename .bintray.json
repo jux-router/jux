@@ -1,7 +1,7 @@
 {
   "package": {
     "name": "jux",
-    "repo": "maven",
+    "repo": "jux-router",
     "subject": "jux-router"
   },
   "version": {
