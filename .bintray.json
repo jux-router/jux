@@ -1,0 +1,19 @@
+{
+  "package": {
+    "name": "jux",
+    "repo": "maven",
+    "subject": "jux-router"
+  },
+  "version": {
+    "name": "0.1.0-SNAPSHOT",
+    "desc": "Snapshot of the 0.1.0 development version",
+    "gpgSign": false
+  },
+  "files": [
+    {
+      "includePattern": ".*/target/(.*).jar$",
+      "uploadPattern": "/$1"
+    }
+  ],
+  "publish": "true"
+}
