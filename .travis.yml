@@ -9,6 +9,6 @@ deploy:
   key:
       secure: d2cA+LckQe6N1VYiszq8Y37W8qE/kxsyCcWbxpVfcq+d0G9gLmAIqYYcGQ/O85kqGRDJnQBEnsrjyW1U1rzJFOWk3B2mhxs/t/6GTYP4WYu3VVdKsk9e3yORlUt3eAcri9tAUuNR0Iezki6AM7E2QZdfz7SAzsTLJnf9vTTMmVCfFADpahYjYvtEtkgcXG8O+9pb0jvDu5sglhxnoj18pBVJMA2Tecewh+R1ykR9KF5LFPnE3JMLnh+9MNNwBFtAZSXCv6sw9z2B1MPFk7ismEq01Oc0QrFX1SCKHKq9weNIpvqzNE0BZ83UXMvfodz3ZZOuTS22LZLXcpUYxCW5tI/ae9FfARLDlNVWV7zJ1QGfS2aEyn3uuuKVwV09ZqH3BAx9FLTl5naWCMFMtunD5ZSmOhCAQag6gW2QQvuat9OdLX8um9sSa3AAduYZkRRkOyv652SMTa4N7fvavQpDJqwLUnYlBdun1RTAGPWveH8Z92Bh9wGQONlgXLJnsHyNV7qGUcqim3s17CIIg1V958VzlVtG5tupsJ/y5aj6A0mH2LBfWbOfQuxK6t3Yehw+Flqlwkm8+B2rrbho2mskEC3v2TxPxbPZAtwmR4Q+VZTdKkO4FqL5BHAEHTaLbbyMKLTq7rHSV5nx5OiVXocCa4JlZspKW3uh8RlVorR69jE=
   dry-run: true
-  on:
-    repo: jux-router/jux
+#  on:
+#    repo: jux-router/jux
 
