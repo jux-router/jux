@@ -43,6 +43,6 @@ class ObjectMapperSupplier implements Supplier<ObjectMapper> {
     }
 
     private ObjectMapper getDefaultObjectMapper() {
-        return new ObjectMapper();
+        return new ObjectMapper().findAndRegisterModules();
     }
 }
