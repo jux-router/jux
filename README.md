@@ -80,6 +80,10 @@ cd jux/
 ./mvnw clean install
 ```
 
+## Distributing
+
+The distribution of this project is handled to Bintray via Travis-CI.
+
 ## Contributing
 
 If you'd like to contribute, please fork the repository and use a feature
