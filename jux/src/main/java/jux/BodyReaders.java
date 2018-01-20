@@ -55,4 +55,7 @@ public class BodyReaders {
         // TODO this should result in an error code - which one?
         throw new IllegalStateException(msg);
     }
+
+    /** Private constructor ensures no instantiation. **/
+    private BodyReaders() {}
 }

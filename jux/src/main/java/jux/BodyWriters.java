@@ -47,4 +47,7 @@ public class BodyWriters {
                 mediaType);
         throw new IllegalStateException(msg);
     }
+
+    /** Private constructor ensures no instantiation. **/
+    private BodyWriters() {}
 }
