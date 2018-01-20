@@ -60,7 +60,7 @@ class App {
     }
     
     public static Response sayHello(Context ctx, Request req) {
-        return Response.ok("hello").as("text/plain");
+        return Response.ok("hello").asPlainText();
     } 
     
 }

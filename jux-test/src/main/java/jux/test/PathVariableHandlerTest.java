@@ -61,7 +61,7 @@ class PathVariableHandlerTest extends ResponseExpectingTestBase {
         public Response handle(Context ctx, Request req) {
             String param = req.getParam("param").orElse("");
             LOG.info("Param is: {}", param);
-            return Response.ok(param).as("text/plain");
+            return Response.ok(param).asPlainText();
         }
     }
 }

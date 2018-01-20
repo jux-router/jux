@@ -49,7 +49,7 @@ class BasicHandlerTest extends ResponseExpectingTestBase {
     @RouteProvider
     protected void configureRoutes(Router router) {
         router.handle("/foo",
-                (ctx, req) -> Response.ok("hello").as("text/plain"))
+                (ctx, req) -> Response.ok("hello").asPlainText())
                 .methods(GET, POST, PUT, PATCH, DELETE);
     }
 }
