@@ -11,4 +11,5 @@ deploy:
   dry-run: false
   on:
     repo: jux-router/jux
-
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
