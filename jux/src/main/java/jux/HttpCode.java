@@ -15,8 +15,6 @@
  */
 package jux;
 
-import java.util.Arrays;
-
 /**
  * List of constants for http response codes.
  *
@@ -24,6 +22,7 @@ import java.util.Arrays;
  *
  * @author Sandor Nemeth
  */
+@SuppressWarnings("unused")
 public enum HttpCode {
     // 1xx status codes
     CONTINUE(100),

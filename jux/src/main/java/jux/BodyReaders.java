@@ -21,12 +21,11 @@ import org.apache.logging.log4j.Logger;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.stream.StreamSupport;
 
 import static java.util.stream.Collectors.toMap;
 
 /**
- * Utility class for finding {@link BodyReader body readers}.
+ * Utility class for auto-discovering {@link BodyReader body readers}.
  */
 public class BodyReaders {
 
