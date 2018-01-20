@@ -168,6 +168,7 @@
                         <exclude>**/mvnw</exclude>
                         <exclude>**/mvnw.cmd</exclude>
                         <exclude>**/.mvn/**/*</exclude>
+                        <exclude>.codecov.yml</exclude>
                     </excludes>
                 </configuration>
                 <executions>
