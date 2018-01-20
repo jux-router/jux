@@ -11,5 +11,9 @@ deploy:
   dry-run: false
   on:
     repo: jux-router/jux
+    tags: true
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+env:
+  global:
+    - CODECOV_TOKEN=5c618ddc-f969-41eb-8174-da55e6450c53
