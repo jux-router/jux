@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static jux.HttpMethod.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,5 +45,27 @@ class RouterTest {
         assertThat(route.getHandler()).isEqualTo(h2);
         assertThat(route.getPath()).isEqualTo("/2ndhandler");
         assertThat(route.getMethods()).containsExactlyInAnyOrder(POST);
+    }
+
+    @Test
+    void testAddMiddleware() {
+        NoOpMiddleware middleware = new NoOpMiddleware();
+        Router router = new Router().use(middleware);
+        assertThat(router.middlewares().collect(toList()))
+                .hasSize(1)
+                .containsExactlyInAnyOrder(middleware);
+    }
+
+    static class NoOpMiddleware implements Middleware {
+
+        @Override
+        public void doBefore(Context ctx, Request req) {
+            // do nothing
+        }
+
+        @Override
+        public void doAfter(Context ctx, Request req, Response resp) {
+            // do nothing
+        }
     }
 }

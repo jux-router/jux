@@ -15,13 +15,20 @@
  */
 package jux;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
-public class Router implements Iterable<Router.Route> {
+public class Router {
 
     private LinkedList<Route> routes = new LinkedList<>();
+    private LinkedList<Middleware> middlewares = new LinkedList<>();
+
+    // Routes
 
     List<Route> getRoutes() {
         return routes;
@@ -37,9 +44,28 @@ public class Router implements Iterable<Router.Route> {
         return this;
     }
 
-    @Override
-    public Iterator<Route> iterator() {
-        return routes.iterator();
+    public Stream<Route> routes() {
+        return routes.stream();
+    }
+
+    // Middleware
+
+    /**
+     * Configure the router to use the provided middleware.
+     *
+     * @param middleware the {@link Middleware} implementation to be used
+     * @return the router itself
+     */
+    public Router use(Middleware middleware) {
+        middlewares.add(middleware);
+        return this;
+    }
+
+    /**
+     * @return the stream of registered {@link Middleware} instances
+     */
+    public Stream<Middleware> middlewares() {
+        return middlewares.stream();
     }
 
     public class Route {

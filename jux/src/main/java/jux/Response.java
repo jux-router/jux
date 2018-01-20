@@ -15,21 +15,40 @@
  */
 package jux;
 
-// TODO use a builder
-public class Response<T> {
+/**
+ * A Response which can be later on converted to a HTTP response.
+ *
+ * @author Sandor Nemeth
+ */
+public class Response {
 
-    public static <T> Response<T> ok(T body) {
-        Response<T> response = new Response<>();
-        response.status = 200;
-        response.body = body;
+    /**
+     * Create a {@link Response} with the HTTP response code {@code 200} and the given body.
+     *
+     * @param body the body of the response
+     * @return the created response
+     */
+    public static Response ok(Object body) {
+        return Response.status(HttpCode.OK).withBody(body);
+    }
+
+    /**
+     * Creates a new {@link Response} with the passed {@link HttpCode} as status code.
+     *
+     * @param code the status of the response
+     * @return the code
+     */
+    public static Response status(HttpCode code) {
+        Response response = new Response();
+        response.status = code.getCode();
         return response;
     }
 
-    private T body;
+    private Object body;
     private String mediaType;
     private int status;
 
-    public T getBody() {
+    public Object getBody() {
         return body;
     }
 
@@ -41,8 +60,27 @@ public class Response<T> {
         return status;
     }
 
-    public Response<T> as(String mediaType) {
+    // Media type setters
+    public Response as(String mediaType) {
         this.mediaType = mediaType;
+        return this;
+    }
+
+    public Response as(ContentType contentType) {
+        return as(contentType.getContentType());
+    }
+
+    public Response asJson() {
+        return as(ContentType.JSON);
+    }
+
+    public Response asPlainText() {
+        return as(ContentType.PLAIN_TEXT);
+    }
+
+    // Body setters
+    public Response withBody(Object body) {
+        this.body = body;
         return this;
     }
 }

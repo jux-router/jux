@@ -19,15 +19,21 @@ import io.undertow.Handlers;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.BlockingHandler;
+import jux.Middleware;
 import jux.Router;
 import jux.RouterConverter;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Converts the routes registered in {@link jux.Router} into a
  * {@link RoutingHandler} used by the Undertow server.
+ *
+ * @author Sandor Nemeth
  */
 class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
 
@@ -35,17 +41,18 @@ class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
     public RoutingHandler convert(Router router) {
         RoutingHandler handler = Handlers.routing();
 
-        StreamSupport.stream(router.spliterator(), false)
-                .flatMap(this::routes)
+        // get the middlewares
+        List<Middleware> middlewares = router.middlewares().collect(toList());
+
+        router.routes()
+                .flatMap(route -> this.routes(route, middlewares))
                 .forEach(r -> handler.add(r.method, r.path, new BlockingHandler(r.handler)));
 
         return handler;
     }
 
-    private Stream<UndertowRoute> routes(Router.Route route) {
-        return route.getMethods().stream()
-                .map(method -> new UndertowRoute(method.name(), route.getPath(),
-                        route.getHandler()));
+    private Stream<UndertowRoute> routes(Router.Route route, List<Middleware> middlewares) {
+        return route.getMethods().stream().map(method -> new UndertowRoute(method.name(), route.getPath(), route.getHandler()));
     }
 
     private static class UndertowRoute {

@@ -50,8 +50,7 @@ public class QueryParameterHandlerTest extends JuxTestBase {
 
     @Override @RouteProvider
     protected void configureRoutes(Router router) {
-        Handler h = (ctx, req) -> Response.ok(req.getParam("aparam").orElse(""))
-                .as("text/plain");
+        Handler h = (ctx, req) -> Response.ok(req.getParam("aparam").orElse("")).asPlainText();
         router.handle("/foo", h).methods(GET, POST, PUT, PATCH, DELETE);
     }
 }

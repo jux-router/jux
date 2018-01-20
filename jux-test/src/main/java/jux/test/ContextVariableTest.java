@@ -15,41 +15,40 @@
  */
 package jux.test;
 
-import com.google.common.io.CharStreams;
-import jux.Response;
-import jux.Router;
+import jux.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.junit.jupiter.api.Disabled;
 
-import java.io.InputStreamReader;
 import java.net.URI;
 
 import static jux.HttpMethod.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
-@JuxTest
-class BasicHandlerTest extends ResponseExpectingTestBase {
+/**
+ * Test if context variables get set.
+ */
+@Disabled
+public class ContextVariableTest extends ResponseExpectingTestBase {
 
-    @SuppressWarnings("RedundantThrows")
     @Override
     void validateResponse(HttpResponse response) throws Exception {
         JuxAssertions.assertThat(response)
                 .isOk()
-                .hasContentType("text/plain")
+                .hasContentType(ContentType.PLAIN_TEXT.getContentType())
                 .hasStringContent("hello");
     }
 
-    @SuppressWarnings("RedundantThrows")
     @Override
     void configureRequest(HttpRequestBase request, int port) throws Exception {
         request.setURI(URI.create("http://localhost:" + port + "/foo"));
     }
 
     @Override
-    @RouteProvider
     protected void configureRoutes(Router router) {
-        router.handle("/foo",
-                (ctx, req) -> Response.ok("hello").asPlainText())
-                .methods(GET, POST, PUT, PATCH, DELETE);
+        router.handle("/foo", this::handler).methods(GET, POST, PUT, DELETE, PATCH);
+    }
+
+    Response handler(Context ctx, Request req) {
+        return Response.ok(ctx.get("test", String.class).orElse("failed"));
     }
 }

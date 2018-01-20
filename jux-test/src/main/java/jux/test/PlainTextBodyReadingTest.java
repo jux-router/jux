@@ -55,8 +55,8 @@ public class PlainTextBodyReadingTest extends RequestEnclosingTestBase {
                 .methods(GET, POST, PUT, DELETE, PATCH);
     }
 
-    private static Response<String> handlePlainBody(@SuppressWarnings("unused") Context ctx, Request req) {
+    private static Response handlePlainBody(@SuppressWarnings("unused") Context ctx, Request req) {
         String body = req.getBody(String.class);
-        return Response.ok(body).as("text/plain");
+        return Response.ok(body).asPlainText();
     }
 }
