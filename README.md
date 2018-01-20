@@ -1,8 +1,9 @@
 # jux
 > A minimalist and opinionated Java web framework.
 
-[![Travis](https://img.shields.io/travis/rust-lang/rust.svg?style=flat-square)](https://travis-ci.org/jux-router/jux)
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg?style=flat-square&logo=travis)](https://travis-ci.org/jux-router/jux)
 [![Codecov](https://img.shields.io/codecov/c/github/codecov/example-java.svg?style=flat-square)](https://codecov.io/gh/jux-router/jux)
+[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0)
 
 The `jux` project is born out of the idea that the Java community should also
 have a simple library which provides a high-performance web framework, while
