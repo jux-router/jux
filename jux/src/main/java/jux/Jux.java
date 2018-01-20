@@ -36,8 +36,7 @@ public class Jux {
     public static Server start(int port, jux.Router router) {
         ServiceLoader<Server> loader = ServiceLoader.load(Server.class);
         Server server = loader.findFirst().orElseThrow(
-                () -> new IllegalStateException(
-                        "No jux.Server implementation present."));
+                () -> new IllegalStateException("No jux.Server implementation present."));
         LOG.debug("Using server {}", server.getClass());
         server.use(router)
                 .listenOn(port)
@@ -46,4 +45,6 @@ public class Jux {
         return server;
     }
 
+    /** Private constructor so that nobody can instantiate the Jux class. */
+    private Jux() {}
 }
