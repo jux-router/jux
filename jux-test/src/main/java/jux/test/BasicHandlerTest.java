@@ -15,17 +15,15 @@
  */
 package jux.test;
 
-import com.google.common.io.CharStreams;
+import jux.Exchange;
 import jux.Response;
 import jux.Router;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 
-import java.io.InputStreamReader;
 import java.net.URI;
 
 import static jux.HttpMethod.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JuxTest
 class BasicHandlerTest extends ResponseExpectingTestBase {
@@ -48,8 +46,10 @@ class BasicHandlerTest extends ResponseExpectingTestBase {
     @Override
     @RouteProvider
     protected void configureRoutes(Router router) {
-        router.handle("/foo",
-                (ctx, req) -> Response.ok("hello").asPlainText())
-                .methods(GET, POST, PUT, PATCH, DELETE);
+        router.handle("/foo", this::sayHello).methods(GET, POST, PUT, PATCH, DELETE);
+    }
+
+    private void sayHello(Exchange exchange) {
+        exchange.response(Response.ok("hello").asPlainText());
     }
 }

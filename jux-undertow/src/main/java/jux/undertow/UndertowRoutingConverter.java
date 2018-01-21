@@ -24,7 +24,6 @@ import jux.Router;
 import jux.RouterConverter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -42,17 +41,17 @@ class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
         RoutingHandler handler = Handlers.routing();
 
         // get the middlewares
-        List<Middleware> middlewares = router.middlewares().collect(toList());
 
         router.routes()
-                .flatMap(route -> this.routes(route, middlewares))
+                .flatMap(this::routes)
                 .forEach(r -> handler.add(r.method, r.path, new BlockingHandler(r.handler)));
 
         return handler;
     }
 
-    private Stream<UndertowRoute> routes(Router.Route route, List<Middleware> middlewares) {
-        return route.getMethods().stream().map(method -> new UndertowRoute(method.name(), route.getPath(), route.getHandler()));
+    private Stream<UndertowRoute> routes(Router.Route route) {
+        return route.getMethods().stream()
+                .map(method -> new UndertowRoute(method.name(), route));
     }
 
     private static class UndertowRoute {
@@ -60,10 +59,10 @@ class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
         private String path;
         private HttpHandler handler;
 
-        UndertowRoute(String method, String path, jux.Handler handler) {
+        UndertowRoute(String method, Router.Route route) {
             this.method = method;
-            this.path = path;
-            this.handler = new UndertowHttpExchangeHandler(handler);
+            this.path = route.getPath();
+            this.handler = new UndertowHttpExchangeHandler(route.getHandler());
         }
     }
 }

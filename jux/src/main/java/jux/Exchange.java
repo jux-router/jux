@@ -16,20 +16,37 @@
 package jux;
 
 /**
- * Contract for all implementations to satisfy a request arriving to the server.
- *
- * The handler always sits at the end of the chain, therefore it MUST end the exchange.
+ * Model an exchange which is the combination of a request and a result interaction.
  *
  * @author Sandor Nemeth
  */
-@FunctionalInterface
-public interface Handler {
+public class Exchange {
 
-    /**
-     * Handle the request.
-     *
-     * @param exchange the exchange that is happening
-     */
-    void handle(Exchange exchange);
+    private Context context;
+    private Request request;
+    private Response response;
 
+    public Exchange() {
+        context = new Context();
+    }
+
+    public Context context() {
+        return context;
+    }
+
+    public Request request() {
+        return request;
+    }
+
+    public void request(Request request) {
+        this.request = request;
+    }
+
+    public Response response() {
+        return response;
+    }
+
+    public void response(Response response) {
+        this.response = response;
+    }
 }

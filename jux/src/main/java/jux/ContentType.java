@@ -15,12 +15,12 @@
  */
 package jux;
 
-
 /**
  * Collection of common content types.
  *
  * @author Sandor Nemeth
  */
+@SuppressWarnings("unused")
 public enum ContentType {
 
     // Text media types

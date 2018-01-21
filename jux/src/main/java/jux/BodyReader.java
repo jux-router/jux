@@ -21,6 +21,8 @@ import java.util.Collection;
 
 /**
  * The {@code BodyReader} reads the body of an input into a specified class.
+ *
+ * @author Sandor Nemeth
  */
 public interface BodyReader {
 

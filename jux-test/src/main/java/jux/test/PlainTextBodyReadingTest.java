@@ -15,10 +15,7 @@
  */
 package jux.test;
 
-import jux.Context;
-import jux.Request;
-import jux.Response;
-import jux.Router;
+import jux.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.entity.StringEntity;
@@ -51,12 +48,10 @@ public class PlainTextBodyReadingTest extends RequestEnclosingTestBase {
     @Override
     @RouteProvider
     protected void configureRoutes(Router router) {
-        router.handle("/foo", PlainTextBodyReadingTest::handlePlainBody)
-                .methods(GET, POST, PUT, DELETE, PATCH);
+        router.handle("/foo", this::handlePlainBody).methods(GET, POST, PUT, DELETE, PATCH);
     }
 
-    private static Response handlePlainBody(@SuppressWarnings("unused") Context ctx, Request req) {
-        String body = req.getBody(String.class);
-        return Response.ok(body).asPlainText();
+    private void handlePlainBody(Exchange exchange) {
+        exchange.response(Response.ok(exchange.request().getBody(String.class)).asPlainText());
     }
 }
