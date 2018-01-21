@@ -15,7 +15,10 @@
  */
 package jux.test;
 
-import jux.*;
+import jux.ContentType;
+import jux.Exchange;
+import jux.Response;
+import jux.Router;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.junit.jupiter.api.Disabled;
@@ -45,10 +48,11 @@ public class ContextVariableTest extends ResponseExpectingTestBase {
 
     @Override
     protected void configureRoutes(Router router) {
-        router.handle("/foo", this::handler).methods(GET, POST, PUT, DELETE, PATCH);
+        router.handle("/foo", this::sayBackContext).methods(GET, POST, PUT, DELETE, PATCH);
     }
 
-    Response handler(Context ctx, Request req) {
-        return Response.ok(ctx.get("test", String.class).orElse("failed"));
+    private void sayBackContext(Exchange exchange) {
+        String say = exchange.context().get("test", String.class).orElse("failed");
+        exchange.response(Response.ok(say).asPlainText());
     }
 }

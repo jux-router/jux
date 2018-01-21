@@ -15,71 +15,101 @@
  */
 package jux;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import com.google.common.collect.Sets;
+
+import java.util.*;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
-
+/**
+ * The router is the central piece of JUX, being responsible for building up the application that is to be used.
+ *
+ * Usage (example):
+ *
+ * <pre>{@code
+ * Router router = Jux.router();
+ *
+ * router.use(new Middleware1());
+ * router.use(new Middleware2());
+ *
+ * router.handle("/foo", new FooHandler()).methods(GET).and()
+ *     .handle("/foo", new FooPostHandler()).methods(POST).and()
+ *     .handle("/bar", new BarHandler()).methods(POST).using(new Middleware3());
+ * }</pre>
+ *
+ * <strong>Registering middlewares:</strong> The router will assemble the final {@link Handler handlers} using the
+ * following order: <ol> <li>Middlewares registered with {@link Router#use(Middleware...)} in the order of
+ * registration</li> <li>Middlewares registered with {@link Route#using(Middleware...)} in the order of
+ * registration</li> <li>the registered {@link Handler} for the route</li> </ol> Currently there is <strong>no
+ * possibility</strong> to change this ordering.
+ *
+ * @author Sandor Nemeth
+ */
 public class Router {
 
     private LinkedList<Route> routes = new LinkedList<>();
     private LinkedList<Middleware> middlewares = new LinkedList<>();
 
     // Routes
-
-    List<Route> getRoutes() {
-        return routes;
-    }
-
-    public Router handle(String path, jux.Handler handler) {
-        routes.add(new Route(handler, path));
-        return this;
-    }
-
-    public Router methods(HttpMethod... methods) {
-        this.routes.getLast().methods(methods);
-        return this;
+    public Route handle(String path, jux.Handler handler) {
+        Route route = new Route(handler, path, this);
+        routes.add(route);
+        return route;
     }
 
     public Stream<Route> routes() {
         return routes.stream();
     }
 
-    // Middleware
+    // Middlewares
 
-    /**
-     * Configure the router to use the provided middleware.
-     *
-     * @param middleware the {@link Middleware} implementation to be used
-     * @return the router itself
-     */
-    public Router use(Middleware middleware) {
-        middlewares.add(middleware);
-        return this;
+    public void use(Middleware... middlewares) {
+        this.middlewares.addAll(Arrays.asList(middlewares));
     }
 
-    /**
-     * @return the stream of registered {@link Middleware} instances
-     */
     public Stream<Middleware> middlewares() {
-        return middlewares.stream();
+        return this.middlewares.stream();
     }
 
     public class Route {
+
         private jux.Handler handler;
         private String path;
-        private Collection<HttpMethod> methods = new ArrayList<>();
+        private Router router;
+        private Set<HttpMethod> methods = Sets.newHashSet(HttpMethod.values());
+        private LinkedList<Middleware> middlewares = new LinkedList<>();
 
-        Route(jux.Handler handler, String path) {
+        Route(jux.Handler handler, String path, Router router) {
             this.handler = handler;
             this.path = path;
+            this.router = router;
         }
 
+        public Router and() {
+            return router;
+        }
+
+        public Route methods(HttpMethod... methods) {
+            this.methods = Sets.intersection(this.methods, Sets.newHashSet(methods));
+            return this;
+        }
+
+        public Route using(Middleware... middlewares) {
+            this.middlewares.addAll(Arrays.asList(middlewares));
+            return this;
+        }
+
+        // TODO I have no idea how to test this correctly at this moment.
         public jux.Handler getHandler() {
-            return handler;
+            return useMiddlewares(this.router.middlewares, useMiddlewares(middlewares, this.handler));
+        }
+
+        private Handler useMiddlewares(LinkedList<Middleware> middlewares, Handler handler) {
+            Handler result = handler;
+            Iterator<Middleware> iter = middlewares.descendingIterator();
+            while (iter.hasNext()) {
+                result = iter.next().around(result);
+            }
+            return result;
         }
 
         public String getPath() {
@@ -90,8 +120,8 @@ public class Router {
             return methods;
         }
 
-        void methods(HttpMethod... methods) {
-            this.methods.addAll(asList(methods));
+        public List<Middleware> getMiddlewares() {
+            return middlewares;
         }
     }
 }

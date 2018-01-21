@@ -15,6 +15,8 @@
  */
 package jux;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -25,47 +27,122 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RouterTest {
 
-    @Test
-    void buildsBasicRoutes() {
-        jux.Handler h1 = (ctx, req) -> null;
-        jux.Handler h2 = (ctx, req) -> null;
-        Router routeBuilder = new Router()
-                .handle("/head/get", h1).methods(HEAD, GET)
-                .handle("/2ndhandler", h2).methods(POST);
+    private Handler h1 = exchange -> {
+    };
+    private Handler h2 = exchange -> {
+    };
+    private final Router router = new Router();
 
-        List<Router.Route> routes = routeBuilder.getRoutes();
+    @Test
+    void testBuildsBasicRoute() {
+        router.handle("/foo", h1).methods(GET);
+
+        List<Router.Route> routes = router.routes().collect(toList());
+        assertThat(routes).hasSize(1);
+        Router.Route route = routes.get(0);
+
+        assertThat(route.getHandler()).isEqualTo(h1);
+        assertThat(route.getPath()).isEqualTo("/foo");
+        assertThat(route.getMethods()).containsExactlyInAnyOrder(GET);
+    }
+
+    @Test
+    void testRegisterSameHandlerForMultipleMethods() {
+        Router router = new Router();
+        router.handle("/foo", h1).methods(GET, POST);
+        List<Router.Route> routes = router.routes().collect(toList());
+        assertThat(routes).hasSize(1);
+        Router.Route route = routes.get(0);
+
+        assertThat(route.getHandler()).isEqualTo(h1);
+        assertThat(route.getPath()).isEqualTo("/foo");
+        assertThat(route.getMethods()).containsExactlyInAnyOrder(GET, POST);
+    }
+
+    @Test
+    void testRegisterSamePathToDifferentHandlersOnDifferentMethods() {
+        router.handle("/foo", h1).methods(GET, POST).and()
+                .handle("/foo", h2).methods(PUT, DELETE);
+        List<Router.Route> routes = router.routes().collect(toList());
         assertThat(routes).hasSize(2);
 
         Router.Route route = routes.get(0);
         assertThat(route.getHandler()).isEqualTo(h1);
-        assertThat(route.getPath()).isEqualTo("/head/get");
-        assertThat(route.getMethods()).containsExactlyInAnyOrder(HEAD, GET);
+        assertThat(route.getPath()).isEqualTo("/foo");
+        assertThat(route.getMethods()).containsExactlyInAnyOrder(GET, POST);
 
         route = routes.get(1);
         assertThat(route.getHandler()).isEqualTo(h2);
-        assertThat(route.getPath()).isEqualTo("/2ndhandler");
-        assertThat(route.getMethods()).containsExactlyInAnyOrder(POST);
+        assertThat(route.getPath()).isEqualTo("/foo");
+        assertThat(route.getMethods()).containsExactlyInAnyOrder(PUT, DELETE);
     }
 
     @Test
-    void testAddMiddleware() {
-        NoOpMiddleware middleware = new NoOpMiddleware();
-        Router router = new Router().use(middleware);
-        assertThat(router.middlewares().collect(toList()))
+    void testRegisterGeneralMiddlewares() {
+        Middleware noopMiddleware = this::noopMiddleware;
+        router.use(noopMiddleware);
+        List<Middleware> middlewares = router.middlewares().collect(toList());
+
+        assertThat(middlewares)
                 .hasSize(1)
-                .containsExactlyInAnyOrder(middleware);
+                .containsExactlyInAnyOrder(noopMiddleware);
     }
 
-    static class NoOpMiddleware implements Middleware {
+    @Test
+    void testRegisterRouteSpecificMiddleware() {
+        Middleware noopMiddleware = this::noopMiddleware;
+        Router.Route route = router.handle("/foo", h1).methods(POST).using(noopMiddleware);
 
-        @Override
-        public void doBefore(Context ctx, Request req) {
-            // do nothing
-        }
-
-        @Override
-        public void doAfter(Context ctx, Request req, Response resp) {
-            // do nothing
-        }
+        assertThat(route.getMiddlewares())
+                .hasSize(1)
+                .containsExactlyInAnyOrder(noopMiddleware);
     }
+
+    @Test
+    void testNoRouteSpecificMiddlewareReturnsEmptyList() {
+        Router.Route route = router.handle("/foo", h1).methods(GET);
+        assertThat(route.getMiddlewares()).isEmpty();
+    }
+
+    @Test
+    void testNotSettingMethodsResultsInAllMethodsConfigured() {
+        Router.Route route = router.handle("/foo", h1);
+        assertThat(route.getMethods()).containsExactlyInAnyOrder(HttpMethod.values());
+    }
+
+    @Test
+    void testNoMiddlewareRegistered() {
+        Router.Route route = router.handle("/foo", h1);
+        assertThat(route.getHandler()).isEqualTo(h1);
+    }
+
+    // Example and discovery tests
+
+
+    @Test
+    void exampleMergingMiddlewares() {
+        Middleware m1 = createMiddleware(LogManager.getLogger("m1"));
+        Middleware m2 = createMiddleware(LogManager.getLogger("m2"));
+        Middleware m3 = createMiddleware(LogManager.getLogger("m3"));
+        Middleware m4 = createMiddleware(LogManager.getLogger("m4"));
+
+        Logger log = LogManager.getLogger("handler");
+
+        router.use(m1, m2);
+        Router.Route route = router.handle("/foo", exchange -> log.info("handling")).using(m3, m4);
+        route.getHandler().handle(new Exchange());
+    }
+
+    private Middleware createMiddleware(Logger log) {
+        return next -> exchange -> {
+            log.info("before");
+            next.handle(exchange);
+            log.info("after");
+        };
+    }
+
+    private Handler noopMiddleware(Handler next) {
+        return next;
+    }
+
 }

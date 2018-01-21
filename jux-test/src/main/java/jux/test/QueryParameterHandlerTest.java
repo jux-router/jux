@@ -16,8 +16,7 @@
 package jux.test;
 
 import com.google.common.io.CharStreams;
-import jux.Handler;
-import jux.HttpMethod;
+import jux.Exchange;
 import jux.Response;
 import jux.Router;
 import org.apache.http.HttpResponse;
@@ -50,7 +49,11 @@ public class QueryParameterHandlerTest extends JuxTestBase {
 
     @Override @RouteProvider
     protected void configureRoutes(Router router) {
-        Handler h = (ctx, req) -> Response.ok(req.getParam("aparam").orElse("")).asPlainText();
-        router.handle("/foo", h).methods(GET, POST, PUT, PATCH, DELETE);
+        router.handle("/foo", this::sayBackQueryParam).methods(GET, POST, PUT, PATCH, DELETE);
+    }
+
+    private void sayBackQueryParam(Exchange exchange) {
+        Object data = exchange.request().getParam("aparam").orElse("");
+        exchange.response(Response.ok(data).asPlainText());
     }
 }

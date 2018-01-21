@@ -17,6 +17,7 @@ module jux {
     exports jux;
 
     requires org.apache.logging.log4j;
+    requires com.google.common;
 
     uses jux.Server;
     uses jux.BodyReader;

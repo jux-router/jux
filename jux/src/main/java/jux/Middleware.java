@@ -16,26 +16,52 @@
 package jux;
 
 /**
+ * A middleware is sitting between the start of the request handling process and the final {@link Handler}, providing
+ * access to the entire {@link Exchange}, and the ability to things before the request gets handled, or after the
+ * request got already handled by the {@link Handler handler}.
+ *
+ * These middlewares are composable. For example, having the following code:
+ *
+ * <pre>{@code
+ * Handler handler = (exchange) -> LOG.info("hello");
+ * Middleware m1 = (next) -> (exchange) -> {
+ *     LOG.info("executing m1 before");
+ *     next.handle(exchange);
+ *     LOG.info("executing m1 after");
+ * };
+ * Middleware m2 = (next) -> (exchange) -> {
+ *     LOG.info("executing m2 before");
+ *     next.handle(exchange);
+ *     LOG.info("executing m2 after");
+ * };
+ *
+ * Handler final = m2.around(m1.around(handler));
+ * handler.handle(new Exchange());
+ * }</pre>
+ *
+ * would result in the following log messages (in order):
+ *
+ * <pre>{@code
+ * executing m2 before
+ * executing m1 before
+ * hello
+ * executing m1 after
+ * executing m2 after
+ * }</pre>
+ *
  * @author Sandor Nemeth
  */
+@FunctionalInterface
 public interface Middleware {
 
     /**
-     * Do something before the request gets executed.
+     * Wrap the middleware around the handler provided.
      *
-     * @param ctx the context
-     * @param req the request
-     */
-    void doBefore(Context ctx, Request req);
-
-    /**
-     * Do something after the request was executed.
+     * Any implementation MUST do one of two things when returning the new handler. Either it has to call {@code
+     * next.handle(exchange)}, or it MUST finalize the exchange.
      *
-     * @param ctx  the context
-     * @param req  the request
-     * @param resp the response
+     * @param next the next handler in the chain
+     * @return a new handler around the {@code next} handler
      */
-    void doAfter(Context ctx, Request req, Response resp);
-
-
+    Handler around(Handler next);
 }

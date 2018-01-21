@@ -15,18 +15,15 @@
  */
 package jux.test;
 
-import com.google.common.io.CharStreams;
-import jux.*;
+import jux.Exchange;
+import jux.Response;
+import jux.Router;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.InputStreamReader;
 import java.net.URI;
 
 import static jux.HttpMethod.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JuxTest
 class PathVariableHandlerTest extends ResponseExpectingTestBase {
@@ -48,20 +45,10 @@ class PathVariableHandlerTest extends ResponseExpectingTestBase {
     @Override
     @RouteProvider
     protected void configureRoutes(Router router) {
-        router.handle("/foo/{param}/1", new ParamHandler())
-                .methods(GET, POST, PUT, DELETE, PATCH);
+        router.handle("/foo/{param}/1", this::repeatPathParam).methods(GET, POST, PUT, DELETE, PATCH);
     }
 
-    static class ParamHandler implements Handler {
-
-        private static final Logger LOG =
-                LogManager.getLogger(ParamHandler.class);
-
-        @Override
-        public Response handle(Context ctx, Request req) {
-            String param = req.getParam("param").orElse("");
-            LOG.info("Param is: {}", param);
-            return Response.ok(param).asPlainText();
-        }
+    private void repeatPathParam(Exchange exchange) {
+        exchange.response(Response.ok(exchange.request().getParam("param").orElse("failed")).asPlainText());
     }
 }
