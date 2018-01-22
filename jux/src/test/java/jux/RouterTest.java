@@ -18,12 +18,17 @@ package jux;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static jux.HttpMethod.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class RouterTest {
 
@@ -116,29 +121,27 @@ class RouterTest {
         assertThat(route.getHandler()).isEqualTo(h1);
     }
 
-    // Example and discovery tests
-
-
     @Test
-    void exampleMergingMiddlewares() {
-        Middleware m1 = createMiddleware(LogManager.getLogger("m1"));
-        Middleware m2 = createMiddleware(LogManager.getLogger("m2"));
-        Middleware m3 = createMiddleware(LogManager.getLogger("m3"));
-        Middleware m4 = createMiddleware(LogManager.getLogger("m4"));
+    void testMergingMiddlewares() {
+        Middleware m1 = mock(Middleware.class);
+        Middleware m2 = mock(Middleware.class);
+        Middleware m3 = mock(Middleware.class);
+        Middleware m4 = mock(Middleware.class);
 
-        Logger log = LogManager.getLogger("handler");
+        when(m1.around(any(Handler.class))).thenAnswer(i -> i.getArgument(0));
+        when(m2.around(any(Handler.class))).thenAnswer(i -> i.getArgument(0));
+        when(m3.around(any(Handler.class))).thenAnswer(i -> i.getArgument(0));
+        when(m4.around(any(Handler.class))).thenAnswer(i -> i.getArgument(0));
 
         router.use(m1, m2);
-        Router.Route route = router.handle("/foo", exchange -> log.info("handling")).using(m3, m4);
+        Router.Route route = router.handle("/foo", exchange -> {}).using(m3, m4);
         route.getHandler().handle(new Exchange());
-    }
 
-    private Middleware createMiddleware(Logger log) {
-        return next -> exchange -> {
-            log.info("before");
-            next.handle(exchange);
-            log.info("after");
-        };
+        InOrder inOrder = Mockito.inOrder(m1, m2, m3, m4);
+        inOrder.verify(m4).around(any(Handler.class));
+        inOrder.verify(m3).around(any(Handler.class));
+        inOrder.verify(m2).around(any(Handler.class));
+        inOrder.verify(m1).around(any(Handler.class));
     }
 
     private Handler noopMiddleware(Handler next) {
