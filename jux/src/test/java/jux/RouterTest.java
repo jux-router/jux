@@ -15,8 +15,6 @@
  */
 package jux;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -148,4 +146,15 @@ class RouterTest {
         return next;
     }
 
+    @Test
+    void testDefaultSettingHasNoGracefulShutdown() {
+        assertThat(router.getGracefulShutdown()).isFalse();
+    }
+
+    @Test
+    void testCanSetupGracefulShutdown() {
+        router.useGracefulShutdown();
+
+        assertThat(router.getGracefulShutdown()).isTrue();
+    }
 }
