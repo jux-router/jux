@@ -1,7 +1,7 @@
 language: java
 jdk:
 - oraclejdk9
-script: mvn clean install
+script: mvn clean install  sonar:sonar
 deploy:
   provider: bintray
   file: ".bintray.json"
@@ -17,3 +17,8 @@ after_success:
 env:
   global:
     - CODECOV_TOKEN=5c618ddc-f969-41eb-8174-da55e6450c53
+addons:
+  sonarcloud:
+    organization: "jux-router"
+    token:
+      secure: "TcQQ5CGoZuJDxREFao956yVDANXfF2USMCrU5gN7acbMk4b2J4pahpSyhKtRwb4Tdz3AVgONEgOJWGcuzIo7aVS8GmiL6Fh7gHt/l9NG63BsLwybszvgaxkgUu+4d78V3W+JLipikLZrLstZ5D6Awvww+EHW2/boeRdB2+R10j8wUitgWPftBqqP6cxl5yZQ+rWV7nJTmJSBs8uCzcOEvxhpcxSopK0BIYZTwNBsavXmttHbcNXX4NW+a0zi31IF0fUaPVHenAce9heNJ6heC/p4RBNgtfr7k3qLRpswJSD68nD5aoNHeQ96TQnnO92gXijZMyR03+nCd2x7TV42QfI/AQGjX7Zu6DtPCZui0NOGkIOi4Fzd2JYehJcR3JkD+Ed1ksld4uezRBlDCHM+qlzkrP6wlKjZ4gAle6B2uv1MaHUA3RlsE5AKQpWmyNw3KFZOHajsnRSr0aoD1nARsZFhS+y7Gn7NvwIRIxWJYhwRu9KO+pCRTkLXDTYMFIAWBZsy0xsvenuwp4XRGVazRzz9ArIPuDwVGngqX9poH5bcQn2DtIiGYIuTsIqmsBuLaX+883zLDm27mIb3hlKnlB/t5HpuNULY2+Y46/8RPCVbg14CfpvYqfGfYHALEcr3it+g11EQYtfH3lndXHT7LRuTtAgAMTtJis9wtZK8IWY="
