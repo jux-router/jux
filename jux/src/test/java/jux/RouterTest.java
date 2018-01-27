@@ -148,13 +148,13 @@ class RouterTest {
 
     @Test
     void testDefaultSettingHasNoGracefulShutdown() {
-        assertThat(router.getGracefulShutdown()).isFalse();
+        assertThat(router.isGracefulShutdown()).isFalse();
     }
 
     @Test
     void testCanSetupGracefulShutdown() {
         router.useGracefulShutdown();
 
-        assertThat(router.getGracefulShutdown()).isTrue();
+        assertThat(router.isGracefulShutdown()).isTrue();
     }
 }

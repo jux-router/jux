@@ -19,6 +19,7 @@ import io.undertow.Handlers;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.BlockingHandler;
+import io.undertow.server.handlers.GracefulShutdownHandler;
 import jux.Middleware;
 import jux.Router;
 import jux.RouterConverter;
@@ -34,10 +35,10 @@ import static java.util.stream.Collectors.toList;
  *
  * @author Sandor Nemeth
  */
-class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
+class UndertowRoutingConverter implements RouterConverter<HttpHandler> {
 
     @Override
-    public RoutingHandler convert(Router router) {
+    public HttpHandler convert(Router router) {
         RoutingHandler handler = Handlers.routing();
 
         // get the middlewares
@@ -46,7 +47,7 @@ class UndertowRoutingConverter implements RouterConverter<RoutingHandler> {
                 .flatMap(this::routes)
                 .forEach(r -> handler.add(r.method, r.path, new BlockingHandler(r.handler)));
 
-        return handler;
+        return router.isGracefulShutdown() ? new GracefulShutdownHandler(handler) : handler;
     }
 
     private Stream<UndertowRoute> routes(Router.Route route) {

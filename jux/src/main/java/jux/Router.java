@@ -71,9 +71,7 @@ public class Router {
         return this.middlewares.stream();
     }
 
-    public boolean getGracefulShutdown() {
-        return gracefulShutdown;
-    }
+    // other configuration
 
     public boolean isGracefulShutdown() {
         return gracefulShutdown;
