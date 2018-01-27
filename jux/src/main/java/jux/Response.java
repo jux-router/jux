@@ -23,17 +23,28 @@ package jux;
 public class Response {
 
     /**
-     * Create a {@link Response} with the HTTP response code {@code 200} and the given body.
+     * Create a {@link Response} with the HTTP response code {@code 200} and the
+     * given body.
      *
      * @param body the body of the response
      * @return the created response
      */
     public static Response ok(Object body) {
-        return Response.status(HttpCode.OK).withBody(body);
+        return Response.status(HttpCode.OK).withPayload(body);
     }
 
     /**
-     * Creates a new {@link Response} with the passed {@link HttpCode} as status code.
+     * Create a {@link Response} with the HTTP response code {@code 200}.
+     *
+     * @return the created response
+     */
+    public static Response ok() {
+        return Response.status(HttpCode.OK);
+    }
+
+    /**
+     * Creates a new {@link Response} with the passed {@link HttpCode} as status
+     * code.
      *
      * @param code the status of the response
      * @return the code
@@ -44,12 +55,12 @@ public class Response {
         return response;
     }
 
-    private Object body;
+    private Object payload;
     private String mediaType;
     private int status;
 
-    public Object getBody() {
-        return body;
+    public Object getPayload() {
+        return payload;
     }
 
     public String getMediaType() {
@@ -58,6 +69,10 @@ public class Response {
 
     public int getStatus() {
         return status;
+    }
+
+    public boolean hasPayload() {
+        return null != payload;
     }
 
     // Media type setters
@@ -79,8 +94,8 @@ public class Response {
     }
 
     // Body setters
-    public Response withBody(Object body) {
-        this.body = body;
+    public Response withPayload(Object payload) {
+        this.payload = payload;
         return this;
     }
 }

@@ -20,22 +20,23 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.BlockingHandler;
 import io.undertow.server.handlers.GracefulShutdownHandler;
-import jux.Middleware;
 import jux.Router;
 import jux.RouterConverter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.List;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-
 /**
- * Converts the routes registered in {@link jux.Router} into a
- * {@link RoutingHandler} used by the Undertow server.
+ * Converts the routes registered in {@link jux.Router} into a {@link
+ * RoutingHandler} used by the Undertow server.
  *
  * @author Sandor Nemeth
  */
 class UndertowRoutingConverter implements RouterConverter<HttpHandler> {
+
+    private static final Logger LOG =
+            LogManager.getLogger(UndertowRoutingConverter.class);
 
     @Override
     public HttpHandler convert(Router router) {
@@ -45,13 +46,17 @@ class UndertowRoutingConverter implements RouterConverter<HttpHandler> {
 
         router.routes()
                 .flatMap(this::routes)
-                .forEach(r -> handler.add(r.method, r.path, new BlockingHandler(r.handler)));
+                .forEach(r -> handler
+                        .add(r.method, r.path, new BlockingHandler(r.handler)));
 
-        return router.isGracefulShutdown() ? new GracefulShutdownHandler(handler) : handler;
+        return router.isGracefulShutdown() ?
+                new GracefulShutdownHandler(handler) : handler;
     }
 
     private Stream<UndertowRoute> routes(Router.Route route) {
         return route.getMethods().stream()
+                .peek(method -> LOG.debug("Registering endpoint {} {}", method,
+                        route.getPath()))
                 .map(method -> new UndertowRoute(method.name(), route));
     }
 
