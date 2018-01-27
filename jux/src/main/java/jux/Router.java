@@ -48,6 +48,7 @@ public class Router {
 
     private LinkedList<Route> routes = new LinkedList<>();
     private LinkedList<Middleware> middlewares = new LinkedList<>();
+    private boolean gracefulShutdown;
 
     // Routes
     public Route handle(String path, jux.Handler handler) {
@@ -68,6 +69,16 @@ public class Router {
 
     public Stream<Middleware> middlewares() {
         return this.middlewares.stream();
+    }
+
+    // other configuration
+
+    public boolean isGracefulShutdown() {
+        return gracefulShutdown;
+    }
+
+    public void useGracefulShutdown() {
+        this.gracefulShutdown = true;
     }
 
     public class Route {
@@ -98,7 +109,6 @@ public class Router {
             return this;
         }
 
-        // TODO I have no idea how to test this correctly at this moment.
         public jux.Handler getHandler() {
             return useMiddlewares(this.router.middlewares, useMiddlewares(middlewares, this.handler));
         }
