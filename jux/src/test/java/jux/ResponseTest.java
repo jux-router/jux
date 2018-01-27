@@ -15,6 +15,7 @@
  */
 package jux;
 
+import com.google.common.collect.ListMultimap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -39,7 +40,8 @@ class ResponseTest {
     @EnumSource(ContentType.class)
     void testSetCorrectMediaType(ContentType contentType) {
         Response response = Response.ok(null).as(contentType);
-        assertThat(response.getMediaType()).isEqualTo(contentType.getContentType());
+        assertThat(response.getMediaType())
+                .isEqualTo(contentType.getContentType());
     }
 
     @Test
@@ -51,13 +53,15 @@ class ResponseTest {
     @Test
     void testJsonContentType() {
         Response response = Response.ok(null).asJson();
-        assertThat(response.getMediaType()).isEqualTo(ContentType.JSON.getContentType());
+        assertThat(response.getMediaType())
+                .isEqualTo(ContentType.JSON.getContentType());
     }
 
     @Test
     void testPlainTextContentType() {
         Response response = Response.ok(null).asPlainText();
-        assertThat(response.getMediaType()).isEqualTo(ContentType.PLAIN_TEXT.getContentType());
+        assertThat(response.getMediaType())
+                .isEqualTo(ContentType.PLAIN_TEXT.getContentType());
     }
 
     @Test
@@ -68,7 +72,8 @@ class ResponseTest {
 
         assertThat(errorResponse)
                 .hasFieldOrPropertyWithValue("status", 400)
-                .hasFieldOrPropertyWithValue("mediaType", "application/octet-stream")
+                .hasFieldOrPropertyWithValue("mediaType",
+                        "application/octet-stream")
                 .hasFieldOrPropertyWithValue("payload", "test body");
     }
 
@@ -82,5 +87,55 @@ class ResponseTest {
     void testHasBodyReturnsTrueWhenPayloadIsPresent() {
         Response okResponse = Response.ok("hello");
         assertThat(okResponse.hasPayload()).isTrue();
+    }
+
+    @Test
+    void testSetHeader() {
+        Response response = Response.ok()
+                .setHeader("X-Test", "test-value");
+        ListMultimap<String, String> headers = response.getHeaders();
+        assertThat(headers.size()).isEqualTo(1);
+        assertThat(headers.get("X-Test")).containsExactly("test-value");
+    }
+
+    @Test
+    void testSetMultipleHeaderValues() {
+        Response response = Response.ok()
+                .setHeader("X-Test", "v1", "v2");
+        ListMultimap<String, String> headers = response.getHeaders();
+        assertThat(headers.size()).isEqualTo(2);
+        assertThat(headers.get("X-Test"))
+                .containsExactlyInAnyOrder("v1", "v2");
+    }
+
+    @Test
+    void testSetHeaderOverridesExistingHeader() {
+        Response response = Response.ok()
+                .setHeader("X-Test", "v1")
+                .setHeader("X-Test", "v2");
+
+        ListMultimap<String, String> headers = response.getHeaders();
+        assertThat(headers.size()).isEqualTo(1);
+        assertThat(headers.get("X-Test")).containsExactly("v2");
+    }
+
+    @Test
+    void testAddToEmptyHeader() {
+        Response response = Response.ok()
+                .addHeader("X-Test", "test-value");
+        ListMultimap<String, String> headers = response.getHeaders();
+        assertThat(headers.size()).isEqualTo(1);
+        assertThat(headers.get("X-Test")).containsExactly("test-value");
+    }
+
+    @Test
+    void testAddToExistingHeader() {
+        Response response = Response.ok()
+                .setHeader("X-Test", "v1")
+                .addHeader("X-Test", "v2");
+        ListMultimap<String, String> headers = response.getHeaders();
+        assertThat(headers.size()).isEqualTo(2);
+        assertThat(headers.get("X-Test"))
+                .containsExactlyInAnyOrder("v1", "v2");
     }
 }

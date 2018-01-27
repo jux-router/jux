@@ -19,6 +19,7 @@ module jux.undertow {
     requires jux;
     requires undertow.core;
     requires org.apache.logging.log4j;
+    requires com.google.common;
 
     provides jux.Server with jux.undertow.UndertowServer;
 }

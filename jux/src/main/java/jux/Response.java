@@ -15,6 +15,12 @@
  */
 package jux;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
+
+import java.util.*;
+
 /**
  * A Response which can be later on converted to a HTTP response.
  *
@@ -58,6 +64,7 @@ public class Response {
     private Object payload;
     private String mediaType;
     private int status;
+    private ListMultimap<String, String> headers = ArrayListMultimap.create();
 
     public Object getPayload() {
         return payload;
@@ -73,6 +80,10 @@ public class Response {
 
     public boolean hasPayload() {
         return null != payload;
+    }
+
+    public ListMultimap<String, String> getHeaders() {
+        return headers;
     }
 
     // Media type setters
@@ -98,4 +109,24 @@ public class Response {
         this.payload = payload;
         return this;
     }
+
+    // header setters
+    public Response setHeader(String header, String... values) {
+        return setHeader(header, Arrays.asList(values));
+    }
+
+    public Response setHeader(String header, List<String> values) {
+        headers.replaceValues(header, values);
+        return this;
+    }
+
+    public Response addHeader(String header, String... value) {
+        return addHeader(header, Arrays.asList(value));
+    }
+
+    public Response addHeader(String header, List<String> values) {
+        headers.putAll(header, values);
+        return this;
+    }
+
 }
