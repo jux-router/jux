@@ -19,6 +19,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
 import jux.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,6 +51,10 @@ class UndertowHttpExchangeHandler implements HttpHandler {
 
     private void populateHeaders(HttpServerExchange exchange, Response resp) {
         HeaderMap headers = exchange.getResponseHeaders();
+
+        resp.getHeaders().asMap().forEach(
+                (key, value) ->
+                        headers.addAll(HttpString.tryFromString(key), value));
 
         LOG.trace("Using Content-Type {}", resp.getMediaType());
         headers.put(Headers.CONTENT_TYPE, resp.getMediaType());
