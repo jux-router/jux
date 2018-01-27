@@ -64,11 +64,23 @@ class ResponseTest {
     void testCustomResponseBuilding() {
         Response errorResponse = Response.status(HttpCode.BAD_REQUEST)
                 .as(ContentType.BINARY)
-                .withBody("test body");
+                .withPayload("test body");
 
         assertThat(errorResponse)
                 .hasFieldOrPropertyWithValue("status", 400)
                 .hasFieldOrPropertyWithValue("mediaType", "application/octet-stream")
-                .hasFieldOrPropertyWithValue("body", "test body");
+                .hasFieldOrPropertyWithValue("payload", "test body");
+    }
+
+    @Test
+    void testHasBodyReturnsEmptyWhenNoBodyIsSet() {
+        Response okResponse = Response.ok();
+        assertThat(okResponse.hasPayload()).isFalse();
+    }
+
+    @Test
+    void testHasBodyReturnsTrueWhenPayloadIsPresent() {
+        Response okResponse = Response.ok("hello");
+        assertThat(okResponse.hasPayload()).isTrue();
     }
 }

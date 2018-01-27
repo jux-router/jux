@@ -17,13 +17,18 @@ package jux.undertow;
 
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
-import jux.BodyWriters;
-import jux.Exchange;
-import jux.Handler;
-import jux.Response;
+import jux.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 
 class UndertowHttpExchangeHandler implements HttpHandler {
+
+    private static final Logger LOG =
+            LogManager.getLogger(UndertowHttpExchangeHandler.class);
 
     private jux.Handler handler;
 
@@ -38,8 +43,27 @@ class UndertowHttpExchangeHandler implements HttpHandler {
 
         handler.handle(juxExchange);
 
-        Response r = juxExchange.response();
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, r.getMediaType());
-        exchange.getResponseSender().send(BodyWriters.forMediaType(r.getMediaType()).write(r.getBody()));
+        Response response = juxExchange.response();
+        populateHeaders(exchange, response);
+        writePayload(exchange, response);
+    }
+
+    private void populateHeaders(HttpServerExchange exchange, Response resp) {
+        HeaderMap headers = exchange.getResponseHeaders();
+
+        LOG.trace("Using Content-Type {}", resp.getMediaType());
+        headers.put(Headers.CONTENT_TYPE, resp.getMediaType());
+    }
+
+    private void writePayload(HttpServerExchange exchange, Response resp)
+            throws IOException {
+        if (resp.hasPayload()) {
+            LOG.trace("Writing body");
+            BodyWriter writer = BodyWriters.forMediaType(resp.getMediaType());
+            exchange.getResponseSender().send(writer.write(resp.getPayload()));
+        } else {
+            LOG.trace("No body to wrote, exchange is ending.");
+            exchange.endExchange();
+        }
     }
 }

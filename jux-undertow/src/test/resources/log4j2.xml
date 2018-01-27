@@ -23,7 +23,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="jux" level="debug" />
+        <Logger name="jux" level="trace" />
         <Root level="info">
             <AppenderRef ref="console"/>
         </Root>
