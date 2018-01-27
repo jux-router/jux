@@ -15,13 +15,9 @@
  */
 package jux.test;
 
-import jux.ContentType;
-import jux.Exchange;
-import jux.Response;
-import jux.Router;
+import jux.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.junit.jupiter.api.Disabled;
 
 import java.net.URI;
 
@@ -30,7 +26,6 @@ import static jux.HttpMethod.*;
 /**
  * Test if context variables get set.
  */
-@Disabled
 public class ContextVariableTest extends ResponseExpectingTestBase {
 
     @Override
@@ -47,12 +42,24 @@ public class ContextVariableTest extends ResponseExpectingTestBase {
     }
 
     @Override
+    @RouteProvider
     protected void configureRoutes(Router router) {
-        router.handle("/foo", this::sayBackContext).methods(GET, POST, PUT, DELETE, PATCH);
+        router.use(this::helloInjectingMiddleware);
+        router.handle("/foo", this::sayBackContext)
+                .methods(GET, POST, PUT, DELETE, PATCH);
     }
 
     private void sayBackContext(Exchange exchange) {
-        String say = exchange.context().get("test", String.class).orElse("failed");
+        String say = exchange.context()
+                .get("test", String.class)
+                .orElse("failed");
         exchange.response(Response.ok(say).asPlainText());
+    }
+
+    private Handler helloInjectingMiddleware(Handler handler) {
+        return (exchange) -> {
+            exchange.context().set("test", "hello");
+            handler.handle(exchange);
+        };
     }
 }
