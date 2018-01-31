@@ -16,8 +16,8 @@
 package jux.bodyparser.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jux.serviceloader.Loader;
 
-import java.util.ServiceLoader;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -33,12 +33,12 @@ class ObjectMapperSupplier implements Supplier<ObjectMapper> {
 
     @Override
     public ObjectMapper get() {
-        return get(ServiceLoader.load(ObjectMapperProvider.class).stream());
+        return get(Loader.load(ObjectMapperProvider.class));
     }
 
-    ObjectMapper get(Stream<ServiceLoader.Provider<ObjectMapperProvider>> providers) {
+    ObjectMapper get(Stream<ObjectMapperProvider> providers) {
         return providers.findFirst()
-                .map(provider -> provider.get().get())
+                .map(Supplier::get)
                 .orElseGet(this::getDefaultObjectMapper);
     }
 

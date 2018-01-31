@@ -18,9 +18,7 @@ package jux.bodyparser.jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 import static org.mockito.Mockito.mock;
@@ -41,12 +39,10 @@ class ObjectMapperSupplierTest {
     @SuppressWarnings("unchecked")
     @Test
     void testReturnsSuppliedInstance() {
-        ServiceLoader.Provider loadedProvider = mock(ServiceLoader.Provider.class);
         ObjectMapperProvider provider = mock(ObjectMapperProvider.class);
-        when(loadedProvider.get()).thenReturn(provider);
         when(provider.get()).thenReturn(SUPPLIED_INSTANCE);
 
-        Assertions.assertThat(supplier.get(Stream.of(loadedProvider)))
+        Assertions.assertThat(supplier.get(Stream.of(provider)))
                 .isNotNull()
                 .isEqualTo(SUPPLIED_INSTANCE);
     }

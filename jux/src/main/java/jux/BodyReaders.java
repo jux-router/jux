@@ -15,12 +15,12 @@
  */
 package jux;
 
+import jux.serviceloader.Loader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.AbstractMap;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -34,10 +34,8 @@ public class BodyReaders {
 
     static {
         // this is thread-safe, because we'll only read
-        ServiceLoader<BodyReader> loader = ServiceLoader.load(BodyReader.class);
         LOG.debug("Loading available jux.BodyReader implementations");
-        readers = loader.stream()
-                .map(ServiceLoader.Provider::get)
+        readers = Loader.load(BodyReader.class)
                 .flatMap(r -> r.supportedMediaTypes().stream().map(m -> new AbstractMap.SimpleEntry<>(m, r)))
                 .peek(e -> LOG.debug("Registering {} to read {}", e.getKey(), e.getValue().getClass().getName()))
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));

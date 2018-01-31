@@ -15,6 +15,7 @@
  */
 module jux {
     exports jux;
+    exports jux.serviceloader;
 
     requires org.apache.logging.log4j;
     requires com.google.common;

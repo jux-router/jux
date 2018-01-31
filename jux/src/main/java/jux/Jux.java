@@ -15,10 +15,9 @@
  */
 package jux;
 
+import jux.serviceloader.JuxServerSupplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ServiceLoader;
 
 /**
  * Jux is the main point of entry to the Jux library.
@@ -34,10 +33,7 @@ public class Jux {
     }
 
     public static Server start(int port, jux.Router router) {
-        ServiceLoader<Server> loader = ServiceLoader.load(Server.class);
-        Server server = loader.findFirst().orElseThrow(
-                () -> new IllegalStateException("No jux.Server implementation present."));
-        LOG.debug("Using server {}", server.getClass());
+        Server server = new JuxServerSupplier().get();
         server.use(router)
                 .listenOn(port)
                 .start();
